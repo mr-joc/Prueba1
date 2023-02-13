@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
+
+
+namespace appWebPrueba.Models
+{
+    public class EmpleadoVM
+    {
+        public List<GridEmpleado> lGridEmpleado { get; set; }
+        [Display(Name = "ID de Empleado")]
+        public int intEmpleadoID { get; set; }
+        [Display(Name = "Nombre")]
+        public string strNombres { get; set; }
+        [Display(Name = "Apellido Paterno")]
+        public string strApPaterno { get; set; }
+        [Display(Name = "Apellido Materno")]
+        public string strApMaterno { get; set; }
+        [Display(Name = "Número de Empleado")]
+        public int intNumEmpleado { get; set; }
+        [Display(Name = "Rol")]
+        public int intRol { get; set; }
+
+        public List<Rol> lRol { get; set; }
+        public Rol Rol { get; set; }
+
+        public int IsBorrado { get; set; }
+        public bool Estado { get; set; }
+        public string strUsuarioAlta { get; set; }
+    }
+    public class Rol
+    {
+        public string RolID { get; set; }
+        public string Nombre { get; set; }
+    }
+
+    public class GridEmpleado
+    {
+
+        public int intEmpleadoID { get; set; }
+        public string strNombres { get; set; }
+        public string strApPaterno { get; set; }
+        public string strApMaterno { get; set; }
+        public int intNumEmpleado { get; set; }
+        public int intRol { get; set; }
+        public string strRol { get; set; }
+        public bool Estado { get; set; }
+        public int Acciones { get; set; }
+    }
+}

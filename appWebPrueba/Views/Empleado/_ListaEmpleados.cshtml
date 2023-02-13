@@ -1,0 +1,47 @@
+﻿@model appWebPrueba.Models.EmpleadoVM
+
+@{
+    Layout = null;
+}
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>id de Empleado</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Número de Empleado</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridEmpleado != null)
+            {
+                foreach (var item in Model.lGridEmpleado)
+                {
+            <tr>
+                <td style="font-size:12px">@item.intEmpleadoID</td>
+                <td style="font-size:12px">@item.strNombres</td>
+                <td style="font-size:12px">@item.strApPaterno</td>
+                <td style="font-size:12px">@item.strApMaterno</td>
+                <td style="font-size:12px">@item.intNumEmpleado</td>
+                <td style="font-size:12px">@item.strRol</td>
+                <td style="font-size:12px">
+                    @{
+                        string Elementoi = (@item.Estado == true ? "<span title='Activo'><i class='fas fa-check' style='color: green;'></i></span>" : "<span title='Inactivo'><i class='fas fa-times' style='color: red;'></i></i></span>");
+                    }
+                    @Html.Raw(@Elementoi)
+                </td>
+                <td style="font-size:12px">
+                    <span title="Editar" class='urlEditar' data='@item.intEmpleadoID'><i class='fas fa-edit' style='color: #5d9cec;'></i></span>&nbsp;&nbsp;
+                    <span title="Eliminar" class='urlEliminar' data='@item.intEmpleadoID'><i class='fas fa-trash' style='color: red;'></i></span>
+                </td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

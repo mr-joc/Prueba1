@@ -1,0 +1,14 @@
+﻿body {
+}
+
+.modal-ancho {
+    width: 98%;
+}
+
+@media (max-width: 767px) {
+    .modal-ancho {
+        width: 98%;
+        max-height: 80vh; /*O el 80% de la altura de la ventana*/
+        overflow: auto;
+    }
+}

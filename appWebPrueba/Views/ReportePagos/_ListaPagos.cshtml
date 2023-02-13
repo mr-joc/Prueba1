@@ -1,0 +1,39 @@
+﻿@model appWebPrueba.Models.ReportePagosVM
+
+@{
+    Layout = null;
+}
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Número de Empleado</th>
+                <th>Nombre</th>
+                <th>Horas Laboradas</th>
+                <th>Pago por Entregas</th>
+                <th>Bonos</th>
+                <th>Retenciones</th>
+                <th>Vales</th>
+                <th>Sueldo Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridPagos != null)
+            {
+                foreach (var item in Model.lGridPagos)
+                {
+            <tr>
+                <td style="font-size:12px">@item.intNumEmpleado</td>
+                <td style="font-size:12px">@item.strNombreCompleto</td>
+                <td style="font-size:12px">@item.intHorasLaboradas</td>
+                <td style="font-size:12px">@string.Format("{0:c}", item.dblSueldoXEntregas)</td>
+                <td style="font-size:12px">@string.Format("{0:c}", item.dblBonoXHoras)</td>
+                <td style="font-size:12px">@string.Format("{0:c}", item.dblSueldoMenosISRAdicional)</td>
+                <td style="font-size:12px">@string.Format("{0:c}", item.dblVales)</td>
+                <td style="font-size:12px">@string.Format("{0:c}", item.dblTotal)</td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
