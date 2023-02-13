@@ -23,6 +23,7 @@ namespace appWebPrueba.App_Start
 
         public void ConfigureAuth(IAppBuilder app)
         {
+            //Este archivo de clases es importante para establecer a donde se va a conectar el usuario cuando inicie el sitio
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {

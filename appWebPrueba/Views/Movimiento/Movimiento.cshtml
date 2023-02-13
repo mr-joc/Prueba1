@@ -138,21 +138,6 @@
 
         function ListarMovimientos() {
             alert("Pendiente...");
-            @*$.ajax({
-                type: "POST",
-                url: "@Url.Action("getGridMovimiento", "Movimiento")",
-                data: $('form').serialize(),
-                datatype: "json",
-                traditional: true,
-                success: function (data) {
-                   LimpiaDiv('EmpleadosForm-wrapper');
-                    $('#EmpleadosForm-wrapper').html(data);
-                    $('#EmpleadosForm-wrapper').fadeIn();
-                },
-                error: function (data) {
-                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
-                }
-            });*@
         }
 
 
