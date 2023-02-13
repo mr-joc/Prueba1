@@ -1,0 +1,133 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.MovimientoVM
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-lg-8">
+            Coloca el número de empleado y presiona Enter
+            <input type="text" class="form-control" id="numEmpleado">
+        </div>
+        <div class="col-lg-4">
+            &nbsp;
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.intNumEmpleado, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.intNumEmpleado, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombreEmpleado, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombreEmpleado, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombreRol, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombreRol, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        &nbsp;
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.intMes, new { @class = "label-form" })
+            <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                    class="form-control populate mb-3"
+                    name="@Html.NameFor(x => x.Mes.MesID)"
+                    id="cboMes">
+
+                @if (Model.Mes.MesID != null)
+                {
+                    <option value="@Model.Mes.MesID">@Model.Mes.Nombre</option>
+                }
+                else
+                {
+                    <option value="">Seleccione...</option>
+                }
+                @foreach (appWebPrueba.Models.Mes mes in Model.lMes)
+                {
+                    <option value="@mes.MesID">
+                        @mes.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.intCantidadEntregas, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.intCantidadEntregas, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.intCantidadEntregas, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            &nbsp;
+        </div>
+        <div class="col-lg-3">
+            &nbsp;
+            <div class="input-group">
+                &nbsp;
+            </div>
+            &nbsp;
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <div>
+                &nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <div class="btn btn-primary float-right" id="GuardarMovimiento-btn">
+                Guardar
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    const textbox = document.getElementById("numEmpleado");
+    textbox.addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter") {
+            var intnumempleado = document.getElementById("numEmpleado").value;
+
+            //alert(intnumempleado);
+
+            ////////////////////////////
+
+
+        //e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("BuscarDatosEmpleado", "Movimiento")",
+            data: { intNumEmpleado: intnumempleado },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#CreateForm-wrapper').html(data);
+                $('#CreateForm-wrapper').fadeIn();
+                $('#CreateForm-wrapper').fadeIn();
+                //HoldOn.close();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+            ////////////////////////////////////
+
+            }
+    });
+
+</script>
+
+
+

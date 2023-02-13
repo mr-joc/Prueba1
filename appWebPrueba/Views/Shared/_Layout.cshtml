@@ -1,0 +1,280 @@
+﻿@using System.Security.Claims
+@using System.Threading
+@using appWebPrueba.Clases;
+
+@{
+    string URLConfig = System.Configuration.ConfigurationManager.AppSettings["Sitio"];
+    bool LocalHost = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["LocalHost"].ToString());
+    string CacheVersion = DateTime.Now.ToString("ddMMyyyy");
+}
+<!DOCTYPE html>
+<html lang="es-mx">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+    <title>Administración</title>
+    <!-- =============== VENDOR STYLES ===============-->
+    <!-- FONT AWESOME-->
+    <link rel="stylesheet" href="~/vendor/fortawesome/fontawesome-free-webfonts/css/fontawesome.css">
+    <link rel="stylesheet" href="~/vendor/fortawesome/fontawesome-free-webfonts/css/fa-brands.css">
+    <link rel="stylesheet" href="~/vendor/fortawesome/fontawesome-free-webfonts/css/fa-regular.css">
+    <link rel="stylesheet" href="~/vendor/fortawesome/fontawesome-free-webfonts/css/fa-solid.css">
+
+    <!-- SIMPLE LINE ICONS-->
+    <link rel="stylesheet" href="~/vendor/simple-line-icons/css/simple-line-icons.css">
+    <!-- ANIMATE.CSS-->
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- WEATHER ICONS-->
+    <link rel="stylesheet" href="~/vendor/weather-icons/css/weather-icons.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="~/css/bootstrap.css" id="bscss">
+    <!-- =============== APP STYLES ===============-->
+    <link rel="stylesheet" href="~/css/app.css" id="maincss">
+    @RenderSection("styles", required: false)
+
+    @{
+        //Get the current claims principal
+        var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+        // Get the claims values
+        var Nombre = identity.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
+        var IDRol = identity.Claims.Where(c => c.Type == ClaimTypes.Gender).Select(c => c.Value).SingleOrDefault();
+        //////var Correo = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+        var UserId = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
+        var InternalID = identity.Claims.Where(c => c.Type == ClaimTypes.SerialNumber).Select(c => c.Value).SingleOrDefault();
+
+        List<Menu> lMenu = appWebPrueba.DataAccess.Seguridad.GetMenuByRol(int.Parse(IDRol));
+    }
+
+</head>
+<body>
+    @if (LocalHost)
+    {
+        <div id="BaseUrl" data-baseurl="@Context.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")"></div>
+    }
+    else
+    {
+        <div id="BaseUrl" data-baseurl="@URLConfig"></div>
+    }
+    <div class="wrapper">
+        <!-- ESTE ES EL MENU INICIA-->
+        <header class="header">
+            <!-- START Top Navbar-->
+            <nav class="navbar topnavbar">
+                <!-- START navbar header-->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#/">
+                        <div class="brand-logo">
+                            <img class="img-fluid" src="~/img/logo.png" alt="App Logo" height="180" width="60">
+                        </div>
+                        <div class="brand-logo-collapsed">
+                            <img class="img-fluid" src="~/img/logo.png" alt="App Logo">
+                        </div>
+                    </a>
+                </div>
+                <!-- END navbar header-->
+                <!-- START Left navbar-->
+                <ul class="navbar-nav mr-auto flex-row">
+                    <li class="nav-item">
+                        <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
+                        <a class="nav-link d-none d-md-block d-lg-block d-xl-block" href="#" data-trigger-resize="" data-toggle-state="aside-collapsed" title="Expandir / Contraer Menú">
+                            <em class="fas fa-bars"></em>
+                        </a>
+                        <!-- Button to show/hide the sidebar on mobile. Visible on mobile only.-->
+                        <a class="nav-link sidebar-toggle d-md-none" href="#" data-toggle-state="aside-toggled" data-no-persist="true">
+                            <em class="fas fa-bars"></em>
+                        </a>
+                    </li>
+                    <!-- START lock screen-->
+                    <!--
+    <li class="nav-item d-none d-md-block">
+        <a id="aSalida" class="nav-link" href="Url.Action("LogOff", "Account")" title="Salir">
+            <em class="icon-lock"></em>
+        </a>
+    </li> -->
+                    <!-- END lock screen-->
+                    <!-- START Alert menu-->
+                    <!-- END Alert menu-->
+                </ul>
+                <!-- END Left navbar-->
+                <!-- START Right Navbar-->
+                <ul class="navbar-nav flex-row">
+                </ul>
+                <!-- END Right Navbar-->
+            </nav>
+            <!-- END Top Navbar-->
+        </header>
+        <!-- ESTE ES EL MENU TERMINA -->
+        <!-- sidebar-->
+        <aside class="aside-container">
+            <!-- START Sidebar (left)-->
+            <div class="aside-inner">
+                <!-------------------------------------------------------------------------------------------------------------------------------------->
+                <nav id="menu" class="sidebar" role="navigation">
+                    <ul class="sidebar-nav">
+                        <li class="nav-heading ">
+                            <span data-localize="sidebar.heading.HEADER">&nbsp;</span>
+                        </li>
+                    </ul>
+                    <ul class="sidebar-nav">
+                        @foreach (var lvl1 in lMenu.Where(w => w.Nivel == 1).OrderBy(o => o.Orden))
+                        {
+                            if (lvl1.IsNode == false)
+                            {
+                                <li class="sidebar-subnav-header">
+                                    <a class="sidebar-subnav-header" href=@Url.Action(lvl1.View, lvl1.Controller)>
+                                        <i class='@lvl1.Icon' aria-hidden="true"></i>
+                                        <span>@lvl1.Descripcion</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class=" ">
+                                    <a href="#@lvl1.Descripcion" title="@lvl1.Descripcion" data-toggle="collapse">
+                                        <em class="@lvl1.Icon"></em>
+                                        <span data-localize="sidebar.nav.DASHBOARD">@lvl1.Descripcion</span>
+                                    </a>
+                                    <ul class="sidebar-nav sidebar-subnav collapse" id="@lvl1.Descripcion">
+                                        @foreach (var lvl2 in lMenu.Where(w => w.subMenu == lvl1.IdMenu).OrderBy(o => o.Orden))
+                                        {
+                                            if (lvl2.IsNode == false)
+                                            {
+                                                <li class=" ">
+                                                    <a href="@Url.Action(lvl2.View, lvl2.Controller, new { Id = lvl2.Parametro })">
+                                                        <em class="far fa-dot-circle"></em><span>@lvl2.Descripcion</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class=" ">
+                                                    <a href="#multilevel" title="Multilevel" data-toggle="collapse"><em class="far fa-folder-open"></em><span>@lvl2.Descripcion</span></a>
+                                                    <ul class="sidebar-nav sidebar-subnav collapse" id="multilevel">
+                                                        @foreach (var lvl3 in lMenu.Where(w => w.subMenu == lvl2.IdMenu).OrderBy(o => o.Orden))
+                                                        {
+                                                            if (lvl3.IsNode == true)//aqui se cambia el modo al contrario, ahora declaramos primero si es nodo
+                                                            {
+                                                                <li class=" ">
+                                                                    <a href="#level2" title="@lvl3.Descripcion" data-toggle="collapse">
+                                                                        <em class="far fa-arrow-alt-circle-right"></em><span>@lvl3.Descripcion</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li class=" ">
+                                                                    @foreach (var lvl4 in lMenu.Where(w => w.subMenu == lvl3.IdMenu).OrderBy(o => o.Orden))
+                                                                    {
+                                                                        <ul class="sidebar-nav sidebar-subnav collapse" id="level2">
+                                                                            <li class=" ">
+                                                                                <a href="@Url.Action(lvl4.View, lvl4.Controller, new { Id = lvl4.Parametro })" title="@lvl4.Descripcion">
+                                                                                    <span>@lvl4.Descripcion</span>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    }
+                                                                </li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li class=" ">
+                                                                    <a href="@Url.Action(lvl3.View, lvl3.Controller, new { Id = lvl3.Parametro })" title="@lvl3.Descripcion">
+                                                                        <em class="far fa-dot-circle"></em><span>@lvl3.Descripcion</span>
+                                                                    </a>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        <!--</ul>
+                                                        </li>-->
+                                                    </ul>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </nav>
+                <!-- END sidebar nav-->
+                <!------------------------------------------------------------------------------------------------------------------------------------------->
+            </div>
+            <!-- END Sidebar (left)-->
+
+        </aside>
+
+        <aside class="offsidebar d-none">
+            <nav>
+                <h3 class="text-center text-thin mt-4" id="PanelTitle"></h3>
+                <div class="p-2">
+                    <h4 class="text-muted text-thin" id="PanelSubTitle"></h4>
+                    <div id="PanelContent"></div>
+                </div>
+            </nav>
+        </aside>
+        <!-- Main section-->
+        <section class="section-container">
+            <div class="content-wrapper">
+                @RenderBody()
+            </div>
+        </section>
+        <footer class="footer-container">
+            <span>Sistema de Administración</span>
+            <span class="mr-2">-</span>
+            <span>@DateTime.Now.Year</span>
+        </footer>
+    </div>
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- SLIMSCROLL-->
+    <script src="~/vendor/jquery-slimscroll/jquery.slimscroll.js"></script>
+    <!-- SPARKLINE-->
+    <script src="~/vendor/jquery-sparkline/jquery.sparkline.js"></script>
+    <!-- FLOT CHART-->
+    <script src="~/vendor/flot/jquery.flot.js"></script>
+    <script src="~/vendor/jquery.flot.tooltip/js/jquery.flot.tooltip.js"></script>
+    <script src="~/vendor/flot/jquery.flot.resize.js"></script>
+    <script src="~/vendor/flot/jquery.flot.pie.js"></script>
+    <script src="~/vendor/flot/jquery.flot.time.js"></script>
+    <script src="~/vendor/flot/jquery.flot.categories.js"></script>
+    <script src="~/vendor/jquery.flot.spline/jquery.flot.spline.js"></script>
+    <!-- EASY PIE CHART-->
+    <script src="~/vendor/easy-pie-chart/dist/jquery.easypiechart.js"></script>
+    <!-- MOMENT JS-->
+    <script src="~/vendor/moment/min/moment-with-locales.js"></script>
+    <!-- =============== APP SCRIPTS ===============-->
+    <script src="~/js/app.js"></script>
+    @RenderSection("scripts", required: false)
+
+
+    <!------------------------------------------------------------------------------------------------------------->
+    <!-- =============== SCRIPTS VENDOR, estos son para mostrar el menú de alertas ===============-->
+    <script src="/Vendor/jquery/dist/jquery.js"></script>
+    <script src="/Vendor/bootstrap/dist/js/bootstrap.js"></script>
+
+
+
+    <!-- ===============================-->
+    <!------------------------------------------------------------------------------------------------------------->
+</body>
+
+</html>

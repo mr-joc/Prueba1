@@ -1,0 +1,168 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.ReportePagosVM
+
+@{
+    ViewBag.Title = "Reporte Mensual de Pagos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-heading">
+    <div>
+        Reporte Mensual de Pagos<small>Selecciona el mes y da click en "Listar"</small>
+    </div>
+</div>
+
+<!-- START card-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <div class="col-lg-4">
+                @Html.LabelFor(x => x.intMes, new { @class = "label-form" })
+                <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                        class="form-control populate mb-3"
+                        name="@Html.NameFor(x => x.MesP.MesID)"
+                        id="cboMes">
+
+                    @if (Model.MesP.MesID != null)
+                    {
+                        <option value="@Model.MesP.MesID">@Model.MesP.Nombre</option>
+                    }
+                    else
+                    {
+                        <option value="">Seleccione...</option>
+                    }
+                    @foreach (appWebPrueba.Models.MesP mesP in Model.lMesP)
+                    {
+                        <option value="@mesP.MesID">
+                            @mesP.Nombre
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-4">
+                &nbsp;
+                <div class="btn btn-primary float-right" id="Listar-btn">
+                    Listar
+                </div>
+            </div>
+            <div class="col-lg-4">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-primary mb-3">
+                        <h5>Listado</h5>
+                    </div>
+                    <div class="card-wrapper collapse show">
+                        <div class="card-body">
+                            <div id="ListadoForm-wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/vendor/sweetalert2/sweetalert2.min.css" />
+
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- Datatables-->
+    <link rel="stylesheet" href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="../css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="~/vendor/holdon/HoldOn.min.css" />
+}
+
+@section Scripts {
+    <script src="~/vendor/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/vendor/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- Datatables-->
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/dataTables.buttons.js"></script>
+    <script src="~/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.colVis.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.flash.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.html5.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.print.js"></script>
+    <script src="~/vendor/datatables.net-keytable/js/dataTables.keyTable.js"></script>
+    <script src="~/vendor/datatables.net-responsive/js/dataTables.responsive.js"></script>
+    <script src="~/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="~/vendor/jszip/dist/jszip.js"></script>
+    <script src="~/vendor/pdfmake/build/pdfmake.js"></script>
+    <script src="~/vendor/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer.js@4.0.2/dist/easytimer.min.js"></script>
+    <script src="~/vendor/holdon/HoldOn.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).on("click", "#Listar-btn", function (e) {
+            ListarPagos();
+    });
+
+        function ListarPagos() {
+            var mes = document.getElementById('cboMes').value;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getGridPagos", "ReportePagos")",
+                data: {
+                    intMes: mes
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                   LimpiaDiv('ListadoForm-wrapper');
+                    $('#ListadoForm-wrapper').html(data);
+                    $('#ListadoForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }
+
+
+
+
+
+
+        function LimpiaDiv(elementID) {
+            var div = document.getElementById(elementID);
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+
+            }
+        }
+
+    </script>
+}

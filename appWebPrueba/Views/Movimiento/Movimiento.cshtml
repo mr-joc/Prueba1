@@ -1,0 +1,220 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.MovimientoVM
+@{
+    ViewBag.Title = "Movimientos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- START card-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row" id="CreateView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-primary mb-3">
+                        <h5>Captura de Movimientos por Mes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="CreateForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display:none" class="row" id="EditView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-primary mb-3">
+                        <h5>Editar Movimiento</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="EditForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display:none" class="row">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-primary mb-3">
+                        <h5>Listado</h5>
+                    </div>
+                    <div class="card-wrapper collapse show">
+                        <div class="card-body">
+                            <div id="MovimientosForm-wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/vendor/sweetalert2/sweetalert2.min.css" />
+
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- Datatables-->
+    <link rel="stylesheet" href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="../css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="~/vendor/holdon/HoldOn.min.css" />
+}
+
+@section Scripts {
+    <script src="~/vendor/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/vendor/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- Datatables-->
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/dataTables.buttons.js"></script>
+    <script src="~/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.colVis.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.flash.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.html5.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.print.js"></script>
+    <script src="~/vendor/datatables.net-keytable/js/dataTables.keyTable.js"></script>
+    <script src="~/vendor/datatables.net-responsive/js/dataTables.responsive.js"></script>
+    <script src="~/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="~/vendor/jszip/dist/jszip.js"></script>
+    <script src="~/vendor/pdfmake/build/pdfmake.js"></script>
+    <script src="~/vendor/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer.js@4.0.2/dist/easytimer.min.js"></script>
+    <script src="~/vendor/holdon/HoldOn.min.js"></script>
+
+    <script type="text/javascript">
+
+
+    function create() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Create", "Movimiento")",
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#CreateForm-wrapper').html(data);
+                $('#CreateForm-wrapper').fadeIn();
+                HoldOn.close();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+         $('#EditView-wrapper').fadeOut();
+        //ListarMovimientos();
+        create();
+    });
+
+
+        function ListarMovimientos() {
+            alert("Pendiente...");
+            @*$.ajax({
+                type: "POST",
+                url: "@Url.Action("getGridMovimiento", "Movimiento")",
+                data: $('form').serialize(),
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                   LimpiaDiv('EmpleadosForm-wrapper');
+                    $('#EmpleadosForm-wrapper').html(data);
+                    $('#EmpleadosForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });*@
+        }
+
+
+
+
+
+        $(document).on("click", "#GuardarMovimiento-btn", function (e) {
+        e.preventDefault();
+            var numempleado = $(@Html.IdFor(x => x.intNumEmpleado)).val();
+            var cantenregas = $(@Html.IdFor(x => x.intCantidadEntregas)).val();
+            var mes = document.getElementById('cboMes').value;
+
+            if (mes != '' && mes != '' && mes != undefined && mes != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GuardarMovimientoXMes", "Movimiento")",
+                data: {
+                    intNumEmpleado: numempleado,
+                    intMes: mes,
+                    intCantidadEntregas: cantenregas,
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos guardados", text: data.Mensaje, type: 'success', });
+                        HoldOn.close();
+                    } else {
+                        Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                    }
+                },
+                error: function (data) {
+                    console.log("Ocurrió el siguiente Error:", data.Mensaje, "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+                Swal.fire({ title: 'Faltan datos, por favor verifica que ningun campo este vacío.', type: 'error', });
+            }
+
+            //location.reload();
+    });
+
+
+        function LimpiaDiv(elementID) {
+            var div = document.getElementById(elementID);
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+
+            }
+        }
+
+
+
+    </script>
+}
