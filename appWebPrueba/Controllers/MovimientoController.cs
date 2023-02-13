@@ -12,6 +12,7 @@ using System.Threading;
 
 namespace appWebPrueba.Controllers
 {
+    //Este controlador nos sirve para cargar los movimientos mensuales, aquí debemos mandar el empleado y las entregas que está realizando por mes
     public class MovimientoController : Controller
     {
         private ClaimsPrincipal identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -21,86 +22,64 @@ namespace appWebPrueba.Controllers
         {
             return View();
         }
+        //Devolvemos la vista de Movimiento
         public ActionResult Movimiento()
         {
             MovimientoVM model = new MovimientoVM();
             return View(model);
         }
-
-        //////public ActionResult getGridMovimiento(MovimientoVM model)
-        //////{
-        //////    int MovimientoID = 0;
-
-        //////    model.lGridMovimiento = new List<GridMovimiento>();
-        //////    model.lGridMovimiento = daMovimiento.getGridMovimiento(MovimientoID);
-
-
-        //////    return PartialView("../Movimiento/_ListaMovimientos", model);
-        //////}
-
-        //////[HttpPost]
-        //////public string EliminarMovimiento(int MovimientoID)
-        //////{
-        //////    string user = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
-        //////    Resultado res = new Resultado();
-        //////    res = daMovimiento.EliminarMovimiento(MovimientoID, user);
-        //////    return JsonConvert.SerializeObject(res);
-        //////}
-
+        //Al cargar la vista, inmediatamente manda llamar a este mpetodo
         [HttpPost]
         public ActionResult Create()
         {
+            //Instanciamos el modelo de MovimientoVM
             MovimientoVM movimiento = new MovimientoVM();
+            //Instanciamos el modelo Rol_a (tiene una lista de ROLES
             movimiento.Rol_a = new Rol_a();
+            //Llenamos el modelo con lo que te devuelva el siguiente método
             movimiento.lRol_a = daMovimiento.GetListaRoles();
+            //Instanciamos el modelo de Mes
             movimiento.Mes = new Mes();
+            //Lo llenamos con el siguiente método
             movimiento.lMes = daMovimiento.GetListaMeses();
-
+            //El modelo ya cargado lo devolvemos en una vista Parcial
             return PartialView("../Movimiento/Create", movimiento);
         }
 
+        //Este método guarda los movimiento por mes del empleado, 
         [HttpPost]
         public string GuardarMovimientoXMes(int intNumEmpleado, int intMes, int intCantidadEntregas)
         {
+            //Asignamos el usuario que está logueado en el sistema
             string user = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
+            //Instanciamos la clase de resultado
             Resultado res = new Resultado();
+            //Llanamos el resultado usando el siguiente método
             res = daMovimiento.GuardarMovimientoXMes(intNumEmpleado, intMes, intCantidadEntregas, user);
+            //Devolvemos la respuesta:
+            //en caso de que haya error vamos a aprovechar para mostrarlo en pantalla, si no hay error, entonces mostramos el ID y un mensaje bastante genérico de lo que respondió l aBD
             return JsonConvert.SerializeObject(res);
         }
 
+        //En la pantalla de Movimientos, necesitamos guardar los datos de entregas, mes y Empleado
+        //Para hacer más amigable este movimiento solo colocaremos el número de Empleado y el sistema buscará los datos
         [HttpPost]
         public ActionResult BuscarDatosEmpleado(int intNumEmpleado)
         {
+            //Instanciamos el modelo de Movimiento
             MovimientoVM movimiento = new MovimientoVM();
+            //Buscamos los datos del empleado con el siguiente método
             movimiento = daMovimiento.BuscaEmpleado(intNumEmpleado);
+            //Adjuntamos al modelo los roles
             movimiento.Rol_a = new Rol_a();
+            //que obtenemos del siguoiente método
             movimiento.lRol_a = daMovimiento.GetListaRoles();
+            //Adjuntamos al modelo la lista de meses para mostrarlo en su combo
             movimiento.Mes = new Mes();
+            //Y lo obtenemos del siguiente método
             movimiento.lMes = daMovimiento.GetListaMeses();
+            //Devolvemos el modelo a la vista para que se llenen los campos
             return PartialView("../Movimiento/Create", movimiento);
         }
-
-        ////[HttpPost]
-        ////public ActionResult EditarMovimiento(int MovimientoID)
-        ////{
-        ////    MovimientoVM movimiento = new MovimientoVM();
-        ////    movimiento = daMovimiento.EditarMovimiento(MovimientoID);
-        ////    movimiento.lRol = daMovimiento.GetListaRoles();
-        ////    return PartialView("../Movimiento/Edit", movimiento);
-        ////}
-
-        ////[HttpPost]
-        ////public string GuardaEditMovimiento(int MovimientoID, string Nombres, string ApPaterno, string ApMaterno, int NumMovimiento, int Rol, int Activo)
-        ////{
-        ////    string user = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
-        ////    string userInternalID = identity.Claims.Where(c => c.Type == ClaimTypes.SerialNumber).Select(c => c.Value).SingleOrDefault();
-
-        ////    Resultado res = new Resultado();
-        ////    bool Estado = (Activo == 0 ? false : true);
-
-        ////    res = daMovimiento.GuardaEditMovimiento(MovimientoID, Nombres, ApPaterno, ApMaterno, NumMovimiento, Rol, Estado, user);
-        ////    return JsonConvert.SerializeObject(res);
-        ////}
-
     }
 }

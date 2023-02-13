@@ -12,6 +12,7 @@ using System.Threading;
 
 namespace appWebPrueba.Controllers
 {
+    //Este controlador se usa para el rporte de pagos por mes
     public class ReportePagosController : Controller
     {
         private ClaimsPrincipal identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
