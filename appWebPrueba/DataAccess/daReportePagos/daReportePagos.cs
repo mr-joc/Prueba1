@@ -10,18 +10,22 @@ namespace appWebPrueba.DataAccess.daReportePagos
 {
     public class daReportePagos
     {
+        //Este método recibe el mes y el empleado (que está en "0") 
         public static List<GridPagos> getGridReportePagos(int intMes, int intEmpleado)
         {
+            //Instanciamos el GRid
             List<GridPagos> gridPagos = new List<GridPagos>();
             try
             {
+                //Asignamos los parámetros a la lista
                 List<Parametros> lParams = new List<Parametros>();
                 lParams.Add(new Parametros { Nombre = "intMes", Tipo = SqlDbType.Int, Valor = intMes });
                 lParams.Add(new Parametros { Nombre = "intEmpleado", Tipo = SqlDbType.Int, Valor = intEmpleado });
-
+                //Usamos el único ambiente que manejamos
                 Conexion cn = new Conexion("cnnAppWebPrueba");
+                //Enviamos los parámetros al siguiente SO
                 DataTable Results = cn.ExecSP("qry_CalcularSueldoTotal_SEL", lParams);
-
+                //y cargamos el modelo con el resultado que arroja la BD
                 gridPagos = (
                     from DataRow dr in Results.Rows
                     select new GridPagos
@@ -52,23 +56,28 @@ namespace appWebPrueba.DataAccess.daReportePagos
             }
             catch (Exception ex)
             {
+                //En caso de error, lo asignamos
                 string error = ex.ToString();
                 return gridPagos;
             }
-
+            //devolvemos el modelo ya cargado con la lista
             return gridPagos;
         }
 
+        //Este sirve para devolver los meses
         public static List<MesP> GetListaMeses()
         {
+            //Instanciamos el modelo de Mes
             List<MesP> mesP = new List<MesP>();
 
             try
             {
                 List<Parametros> lParams = new List<Parametros>();
+                //Usamos el mismo ambiente 
                 Conexion cn = new Conexion("cnnAppWebPrueba");
+                //Mandamos llamar al siguiente SP
                 DataTable Results = cn.ExecSP("qry_ListarMeses_SEL", lParams);
-
+                //Los resultados los usamos para llenar la siguiente lista
                 mesP = (
                     from DataRow dr in Results.Rows
                     select new MesP
@@ -80,9 +89,11 @@ namespace appWebPrueba.DataAccess.daReportePagos
             }
             catch (Exception ex)
             {
+                //En caso de error detenemos la ejecución y devolvemos el resultado
                 string error = ex.ToString();
                 return mesP;
             }
+            //Devolvemos el resultado 
             return mesP;
         }
 
