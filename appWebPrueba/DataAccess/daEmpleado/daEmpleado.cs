@@ -17,12 +17,15 @@ namespace appWebPrueba.DataAccess.daEmpleado
         //Esta lista es para mostrar los datos del empleado
         public static List<GridEmpleado> getGridEmpleado(int EmpleadoID)
         {
+            //Instanciamos "gridEmpleado"
             List<GridEmpleado> gridEmpleado = new List<GridEmpleado>();
             try
             {
                 List<Parametros> lParams = new List<Parametros>();
+                //Declaramos los parámetros
                 lParams.Add(new Parametros { Nombre = "intEmpleadoID", Tipo = SqlDbType.Int, Valor = EmpleadoID });
 
+                //Usamos la conexión ejecutando el siguiente SP
                 Conexion cn = new Conexion("cnnAppWebPrueba");
                 DataTable Results = cn.ExecSP("qry_Empleado_Sel", lParams);
 
@@ -49,6 +52,7 @@ namespace appWebPrueba.DataAccess.daEmpleado
                 return gridEmpleado;
             }
 
+            //Devolvemos la lista
             return gridEmpleado;
         }
 
