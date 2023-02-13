@@ -5,12 +5,16 @@ using System.Web;
 using System.Data;
 using appWebPrueba.Clases;
 using appWebPrueba.Models;
+//<<<<<< HEAD
 //13022023
+///=======
+///>>>> 4ae8ac72b29d62b0ef945c8339197a06d53752b1
 
 namespace appWebPrueba.DataAccess.daEmpleado
 {
     public class daEmpleado
     {
+        //Esta lista es para mostrar los datos del empleado
         public static List<GridEmpleado> getGridEmpleado(int EmpleadoID)
         {
             List<GridEmpleado> gridEmpleado = new List<GridEmpleado>();
