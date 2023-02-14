@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace appWebPrueba.Models
 {
+    //Queda pendiente comentar todos los modelos, pero básicamente cada variable corresponde a una columna o dato que nos entrega la BD
     public class EmpleadoVM
     {
         public List<GridEmpleado> lGridEmpleado { get; set; }

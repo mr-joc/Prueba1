@@ -8,20 +8,26 @@ using appWebPrueba.Models;
 
 namespace appWebPrueba.DataAccess
 {
+    //Esta clase contiene lo necesario para armar el menú, también se puede usar para devolver las notificaciones pero por lo pronto no las usaremos
     public class daMenu
     {
+        //Recibimos el ID del rol al que pertenece el usuario que esté logueado
+        //Instanciamos una lista, que es lo que devolveremos
         public static List<Menu> GetMenuByRol(int IDRol)
         {
             List<Menu> lMenu = new List<Menu>();
 
             try
             {
-                //Conexion cn = new Conexion("erpWeb");
+                //Usaremos el ambiente de "cnnAppWebPrueba"
                 Conexion cn = new Conexion("cnnAppWebPrueba");
+                //Instanciamos los parámetros
                 List<Parametros> lParams = new List<Parametros>();
+                //Y los asignamos
                 lParams.Add(new Parametros { Nombre = "IDRol", Tipo = SqlDbType.Int, Valor = IDRol });
+                //Asignamos a un DataTable lo que te devuelva el siguiente SP
                 DataTable Results = cn.ExecSP("sp_GetMenuByRol", lParams);
-
+                //y vamos pasando cada nodo a una lista
                 lMenu.AddRange(from DataRow dr in Results.Rows
                                select new Menu
                                {
@@ -40,8 +46,10 @@ namespace appWebPrueba.DataAccess
             }
             catch (Exception ex)
             {
+                //en caso de error lo lanzamos
                 throw new ArgumentException("Index is out of range", ex);
             }
+            //Retornamos la lista, esta misma se usará en el archivo principal para armar el menú
             return lMenu;
         }
     }

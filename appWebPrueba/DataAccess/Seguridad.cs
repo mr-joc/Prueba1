@@ -9,6 +9,7 @@ using appWebPrueba.Clases;
 
 namespace appWebPrueba.DataAccess
 {
+    //
     public class Seguridad
     {
         //Recibimos la clave del usuario (el que teclea para ingresar) y buscamos todos sus datos

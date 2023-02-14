@@ -64,21 +64,26 @@ namespace appWebPrueba.DataAccess.daRol
             Conexion cn = new Conexion("cnnAppWebPrueba");
             try
             {
+                //Agregamos los parámetros a la lista
                 lParams.Add(new Parametros { Nombre = "intRol", Tipo = SqlDbType.Int, Valor = intRol });
                 lParams.Add(new Parametros { Nombre = "strUsuario", Tipo = SqlDbType.NVarChar, Valor = user });
                 //este es el SP que vamos a ejecutar
                 DataTable Results = cn.ExecSP("qry_Rol_Del", lParams);
+                //Tomamos la respuesta y asignamos el ID
                 res.Id = (from DataRow dr in Results.Rows select dr["Id"].ToString()).FirstOrDefault();
                 if (res.Id != null)
                 {
+                    //En caso de que haya una respuesta positiva con un ID, asignamos OK en VERDADERO
                     res.OK = true;
                 }
             }
             catch (Exception ex)
             {
+                //En caso de error el OK se devuelve en FALSO y el mensaje de error se asigna con el que devuelva la BD
                 res.OK = false;
                 res.Mensaje = ex.Message;
             }
+            //Devolvemos la respuesta
             return res;
         }
 

@@ -10,17 +10,26 @@ namespace appWebPrueba.DataAccess
 {
     public class Conexion
     {
+        //Esta clase la usaremos siempre para conectarnos a la BD, todas las conexiones pasan por aquí  lo único que necesitamos es saber a que "Ambiente" requerimos conectarnos, el nombre del SP y los parámetros que necesita para funcionar
+
+        //Primero declaramos la variable "gEnviroment"
         private string gEnviroment;
 
+        //Para conectarnos, al mandar el ambiente este se llamará "cnnAppWebPrueba" (puedes usar diferentes ambientes para conectarte a diferentes BD desde el mismo programa)
         public Conexion(string Ambiente)
         {
+            //Igualamos la variable previamente declarada al ambiente
             gEnviroment = Ambiente;
         }
+        //Y resulta que el nombre del ambiente debe ser el nombre de un "connectionStrings" de nuestro web.config, por ejemplo si te conectas a varias BD entonces las colocas en el .config y luego vas cambiando de ambiente para trabajar)
         private string GetConnectionString()
         {
+            //Aqui tomamos los valores de la cadena de conexión que ya mencionamos que está en el web.config
             return System.Configuration.ConfigurationManager.ConnectionStrings[gEnviroment].ConnectionString;
         }
 
+
+        //La siguiente función es la que se conecta a la BD, esta recibe la lista de parámetros
         public DataTable ExecSP(string Sp, List<Parametros> lParams, string TableName = null, int Indice = 0)
         {
             DataTable myTable = new DataTable();
@@ -30,9 +39,11 @@ namespace appWebPrueba.DataAccess
             {
                 table = new DataTable(TableName);
             }
+            //Usamos la cadena de conexión 
             using (var con = new SqlConnection(GetConnectionString()))
             using (var cmd = new SqlCommand(Sp, con))
             {
+                //Vamos separando la lista que trae los parámetros  y los vamos asignando como cmd.Parameters
                 cmd.CommandTimeout = 0;
                 foreach (var item in lParams)
                 {
@@ -72,6 +83,7 @@ namespace appWebPrueba.DataAccess
                             break;
                     }
                 }
+                //Nos conectamos ahora sí a la BD
                 using (var da = new SqlDataAdapter(cmd))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -80,8 +92,10 @@ namespace appWebPrueba.DataAccess
                     {
                         da.TableMappings.Add("Table", "Table");
                         da.TableMappings.Add("Table1", "Table1");
+                        //Llenamos un Dataset
                         DataSet ds = new DataSet();
                         da.Fill(ds);
+                        //y se lo asignamos a una datatable
                         table = ds.Tables[Indice];
                     }
                     else
@@ -90,15 +104,17 @@ namespace appWebPrueba.DataAccess
                     }
                 }
             }
-            //Retorna un DataTable
+            //Retornamos ese DataTable
             return table;
         }
 
+        //Con esta función podemos convertir el Nulo en "", en caso de NO ser nulo pues devolvemos el parámetro
         string NullToString(object Value)
         {
             return Value == null ? "" : Value.ToString();
         }
 
+        //Esta función es para convertir la fecha a STRING
         public string dtToString(object dt, string format)
         {
             return dt == null ? "01-01-0001" : ((DateTime)dt).ToString(format);
