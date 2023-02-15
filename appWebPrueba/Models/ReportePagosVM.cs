@@ -8,6 +8,7 @@ namespace appWebPrueba.Models
 {
     public class ReportePagosVM
     {
+        //Este sirve para instanciar las columnas de la BD, tanto para guardar como para actualizar
         public List<GridPagos> lGridPagos { get; set; }
 
         [Display(Name = "Mes")]
@@ -15,11 +16,13 @@ namespace appWebPrueba.Models
         public List<MesP> lMesP { get; set; }
         public MesP MesP { get; set; }
     }
+    //Listado de los meses
     public class MesP
     {
         public string MesID { get; set; }
         public string Nombre { get; set; }
     }
+    //Listado para regresar a la vista que los muestra (Reporte)
     public class GridPagos
     {
 

@@ -8,6 +8,7 @@ namespace appWebPrueba.Models
 {
     public class RolVM
     {
+        //Este sirve para instanciar las columnas de la BD, tanto para guardar como para actualizar
         public List<GridRol> lGridRol { get; set; }
         [Display(Name = "ID")]
         public int intRolID { get; set; }
@@ -21,6 +22,7 @@ namespace appWebPrueba.Models
         public string strUsuarioAlta { get; set; }
     }
 
+    //Listado de los roles
     public class GridRol
     {
 

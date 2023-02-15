@@ -25,12 +25,6 @@ namespace appWebPrueba
             routeTemplate: "api/{controller}/{id}",
             defaults: new { id = RouteParameter.Optional }
         );
-
-            //routes.MapRoute(
-            //    name: "Error",
-            //    url: "{*url}",
-            //    defaults: new { controller = "StaticContent", action = "PageNotFound" }
-            //    );
         }
     }
 }

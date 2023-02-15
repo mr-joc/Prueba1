@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace appWebPrueba.Models
 {
+    //Este sirve para instanciar las columnas de la BD, tanto para guardar como para actualizar
     public class MovimientoVM
     {
         [Display(Name = "ID")]
@@ -34,11 +35,13 @@ namespace appWebPrueba.Models
         public int IsBorrado { get; set; }
         public string strUsuarioAlta { get; set; }
     }
+    //Lista de Roles
     public class Rol_a
     {
         public string RolID_a { get; set; }
         public string Nombre_a { get; set; }
     }
+    //Listado de los meses
     public class Mes
     {
         public string MesID { get; set; }

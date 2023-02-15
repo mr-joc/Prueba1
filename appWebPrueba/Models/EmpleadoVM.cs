@@ -10,6 +10,7 @@ namespace appWebPrueba.Models
     //Queda pendiente comentar todos los modelos, pero básicamente cada variable corresponde a una columna o dato que nos entrega la BD
     public class EmpleadoVM
     {
+        //Este sirve para instanciar las columnas de la BD, tanto para guardar como para actualizar
         public List<GridEmpleado> lGridEmpleado { get; set; }
         [Display(Name = "ID de Empleado")]
         public int intEmpleadoID { get; set; }
@@ -31,12 +32,13 @@ namespace appWebPrueba.Models
         public bool Estado { get; set; }
         public string strUsuarioAlta { get; set; }
     }
+    //Lista de Roles
     public class Rol
     {
         public string RolID { get; set; }
         public string Nombre { get; set; }
     }
-
+    //Lista de Empleados
     public class GridEmpleado
     {
 
