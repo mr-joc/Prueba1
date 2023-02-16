@@ -6,6 +6,112 @@ USE Dev1
 go
 
 
+go
+CREATE PROCEDURE Busca      
+(      
+@Buscar VarChar(4000),  
+@strOrden VARCHAR(10) =  NULL    
+)      
+AS  
+BEGIN  
+	SET NOCOUNT ON       
+	SELECT DISTINCT idObjeto=sc.ID, nomObjeto=OBJECT_NAME(sc.ID)  
+	INTO #Result  
+	FROM sysComments sc      
+	WHERE sc.Text Like '%' + @Buscar + '%'  
+  
+	IF @strOrden IS NULL  
+	BEGIN  
+		SELECT O.idObjeto, O.nomObjeto, Creado=SYS.create_date, Modificado=SYS.modify_date  
+		FROM #Result AS O, sys.all_objects AS SYS  
+		WHERE SYS.object_id=O.idObjeto  
+		ORDER BY O.idObjeto ASC  
+	END  
+	ELSE  
+	BEGIN  
+		IF @strOrden = 'M'  
+		BEGIN  
+			SELECT O.idObjeto, O.nomObjeto, Creado=SYS.create_date, Modificado=SYS.modify_date  
+			FROM #Result AS O, sys.all_objects AS SYS  
+			WHERE SYS.object_id=O.idObjeto  
+			ORDER BY SYS.modify_date DESC  
+		END  
+		IF @strOrden = 'C'  
+		BEGIN  
+			SELECT O.idObjeto, O.nomObjeto, Creado=SYS.create_date, Modificado=SYS.modify_date  
+			FROM #Result AS O, sys.all_objects AS SYS  
+			WHERE SYS.object_id=O.idObjeto  
+			ORDER BY SYS.create_date DESC  
+		END  
+		IF @strOrden = 'N'  
+		BEGIN  
+			SELECT O.idObjeto, O.nomObjeto, Creado=SYS.create_date, Modificado=SYS.modify_date  
+			FROM #Result AS O, sys.all_objects AS SYS  
+			WHERE SYS.object_id=O.idObjeto  
+			ORDER BY O.nomObjeto ASC  
+		END  
+	END  
+END
+go
+
+
+
+go
+CREATE PROCEDURE BuscaTablas
+(      
+@Buscar VarChar(4000),  
+@strOrden VARCHAR(10) =  NULL    
+)      
+AS  
+BEGIN  
+	SET NOCOUNT ON
+	
+	SELECT 
+		ID=OBJ.object_id,
+		Tabla=INF.TABLE_NAME,
+		Creada=OBJ.create_date,
+		Modificada=OBJ.modify_date,
+		SELECCION = 'SELECT TOP 100 Tabla='''+INF.TABLE_NAME+''', * FROM '+INF.TABLE_NAME+' WITH (NOLOCK)'
+	INTO #Result  
+	FROM Information_Schema.Tables AS INF
+		INNER JOIN sys.objects AS OBJ ON OBJ.name = INF.TABLE_NAME
+	WHERE INF.table_type = 'BASE TABLE' 
+		AND INF.TABLE_NAME LIKE '%' + @Buscar + '%' 
+   
+	IF @strOrden IS NULL  
+	BEGIN
+		SELECT R.ID, R.Tabla, R.Creada, R.Modificada, R.SELECCION
+		FROM #Result AS R
+		ORDER BY R.ID
+	END  
+	ELSE  
+	BEGIN  
+		IF @strOrden = 'M'  
+		BEGIN
+			SELECT R.ID, R.Tabla, R.Creada, R.Modificada, R.SELECCION
+			FROM #Result AS R
+			ORDER BY R.Modificada DESC
+		END  
+		IF @strOrden = 'C'  
+		BEGIN  
+			SELECT R.ID, R.Tabla, R.Creada, R.Modificada, R.SELECCION
+			FROM #Result AS R
+			ORDER BY R.Creada DESC
+		END  
+		IF @strOrden = 'N'  
+		BEGIN
+			SELECT R.ID, R.Tabla, R.Creada, R.Modificada, R.SELECCION
+			FROM #Result AS R
+			ORDER BY R.Tabla DESC
+		END  
+	END  
+END
+go
+
+
+
+
+
 IF EXISTS(SELECT * FROM sysobjects WHERE type = 'U' AND name ='tbRoles')
 BEGIN
    DROP TABLE tbRoles;
