@@ -43,10 +43,8 @@ namespace appWebPrueba.Controllers
             //El empleado se manda en valor "0"
             //int intEmpleado = 0;
 
-            //obtener el rol del usuario
-            string strEmpleado =  identity.Claims.Where(c => c.Type == ClaimTypes.SerialNumber).Select(c => c.Value).SingleOrDefault();
-
-            int intEmpleado = Convert.ToInt32(strEmpleado);
+            //obtener el ID Interno del usuario que está logueado
+            int intEmpleado = Convert.ToInt32(identity.Claims.Where(c => c.Type == ClaimTypes.SerialNumber).Select(c => c.Value).SingleOrDefault());
 
             //Cargamos los pagos  instanciando al Grid
             model.lGridPagos = new List<GridPagos>();

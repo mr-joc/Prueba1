@@ -1,58 +1,11 @@
 USE Dev1
 go
 
-go
--- spRespaldar_Renombrar 'spPruebasParaCambios', 'MR-JOC'
-CREATE PROCEDURE spRespaldar_Renombrar
-@spName VARCHAR(150),
-@Usuario VARCHAR(25) = NULL
-AS
-BEGIN
-
-	SET NOCOUNT ON
-	
-	
-	SET @Usuario = ISNULL(@Usuario, 'mrJOC')
-
-	DECLARE @spRespName VARCHAR(200)
-	SET @spRespName=''+@spName+'___'+@Usuario+'_'+CONVERT(VARCHAR(4), DATEPART(DD, GETDATE()))+CONVERT(VARCHAR(4), DATEPART(MM, GETDATE()))+CONVERT(VARCHAR(4), DATEPART(YY, GETDATE()))
-	PRINT 'Declaramos y asignamos el nombre del SP que queda de respaldo @spRespName = '+@spRespName
-
-	--1
-	PRINT 'Localizamos el SP real, mínimo tiene que existir, si no nos vamos al final'
-	IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(@spName) AND TYPE IN (N'P', N'PC', N'TF', N'FN'))
-	BEGIN
-		PRINT 'Si Existe, entramos a revisar si existe un respaldo'
-		IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(@spRespName) AND TYPE IN (N'P', N'PC', N'TF', N'FN'))
-		BEGIN
-			PRINT 'Como existe el SP real y también existe un respaldo, vamos a borrar el anterior.'
-			DECLARE @InstruccionDropRespaldo NVARCHAR(300)
-			SET @InstruccionDropRespaldo = 'DROP PROCEDURE '+@spRespName+''
-			
-			PRINT 'Esta sería la instrucción que Borra: '+@InstruccionDropRespaldo
-
-			EXECUTE sp_executeSQL @InstruccionDropRespaldo
-			PRINT 'YA BORRAMOS: '+@spRespName
-		END
-		
-		PRINT 'Exista o no el SP de Respaldo, ahora solo toca renombrar'
-		EXEC sp_rename @spName, @spRespName
-		PRINT 'Renombramos "'+@spName+'" con el nombre "'+@spRespName+'"'
-
-		SELECT Resultado = 'Se Renombró el SP "'+@spName+'"'
-	END
-	ELSE
-	BEGIN
-		PRINT 'No existe el SP, no se hace nada'
-		SELECT Resultado = 'No existe el SP, no se modificó'
-	END
-
-END
-go
 
 
 
 go
+--qry_CalcularSueldoTotal_SEL 1,  2
 alter PROCEDURE qry_CalcularSueldoTotal_SEL
 @intMes			INT,
 @intEmpleado	INT = NULL
@@ -80,6 +33,7 @@ BEGIN
 	INTO #tmpDiasLaborados
 	FROM tbJornadasLaborales AS JOR WITH(NOLOCK)
 	WHERE JOR.intMes = @intMes
+		AND JOR.intEmpleadoID =  @intEmpleado
 		AND ISNULL(JOR.IsBorrado, 0) = 0
 	GROUP BY JOR.intEmpleadoID, JOR.intMes, JOR.IsBorrado
 
@@ -120,7 +74,8 @@ BEGIN
 		JOIN tbSueldoBase		AS  SB WITH(NOLOCK) ON  SB.intEmpleadoID = EMP.intEmpleadoID
 		JOIN #tmpDiasLaborados	AS  DL				ON  DL.intEmpleadoID = EMP.intEmpleadoID
 		JOIN #tmpEntregas		AS ENT				ON ENT.intEmpleadoID = EMP.intEmpleadoID 
-		JOIN tbBonoXRol			AS  BR WITH(NOLOCK) ON BR.intRol = ROL.intRol 
+		JOIN tbBonoXRol			AS  BR WITH(NOLOCK) ON BR.intRol = ROL.intRol
+	WHERE EMP.intEmpleadoID = @intEmpleado
 
 	SELECT 
 		 BAS.intEmpleadoID 
@@ -184,6 +139,7 @@ BEGIN
 END
 go
 
-qry_CalcularSueldoTotal_SEL 1, 0
+qry_CalcularSueldoTotal_SEL 1,  2
 go
+
 
