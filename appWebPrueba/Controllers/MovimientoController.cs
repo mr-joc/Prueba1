@@ -66,6 +66,11 @@ namespace appWebPrueba.Controllers
         [HttpPost]
         public ActionResult BuscarDatosEmpleado(int intNumEmpleado)
         {
+            //obtener el rol del usuario
+            string intRol = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+
+            //Si el Rol NO ES 1
+            if (intRol != "1") {
             //Instanciamos el modelo de Movimiento
             MovimientoVM movimiento = new MovimientoVM();
             //Buscamos los datos del empleado con el siguiente método
@@ -80,6 +85,20 @@ namespace appWebPrueba.Controllers
             movimiento.lMes = daMovimiento.GetListaMeses();
             //Devolvemos el modelo a la vista para que se llenen los campos
             return PartialView("../Movimiento/Create", movimiento);
+        }
+            else
+            {
+                //Instanciamos el resultado
+                Resultado res = new Resultado();
+                //enviamos el OK en FALSO
+                res.OK = false;
+                res.Mensaje = "No se pueden capturar movimientos para este Rol";
+
+                //Detornamos el modelo
+                MovimientoVM movimiento = new MovimientoVM();
+                return PartialView("../Movimiento/Create", movimiento);
+
+            }
         }
     }
 }

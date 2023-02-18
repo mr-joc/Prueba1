@@ -41,7 +41,13 @@ namespace appWebPrueba.Controllers
             //Instanciamos el modelo de ReportePagos
             ReportePagosVM model = new ReportePagosVM();
             //El empleado se manda en valor "0"
-            int intEmpleado = 0;
+            //int intEmpleado = 0;
+
+            //obtener el rol del usuario
+            string strEmpleado =  identity.Claims.Where(c => c.Type == ClaimTypes.SerialNumber).Select(c => c.Value).SingleOrDefault();
+
+            int intEmpleado = Convert.ToInt32(strEmpleado);
+
             //Cargamos los pagos  instanciando al Grid
             model.lGridPagos = new List<GridPagos>();
             //Lo llenamos con el siguiente método
