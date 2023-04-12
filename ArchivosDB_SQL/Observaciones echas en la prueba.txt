@@ -1,0 +1,10 @@
+
+- el usuario se loguea y luego los datos
+	se debe hacer en una sola funcion
+
+- ya existen metodos, funciones, librerias, etc
+
+- generar un reporte haciendo solo una 
+
+
+-- si es administrador no permitir esta opcion
