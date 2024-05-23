@@ -13,8 +13,6 @@ using Newtonsoft.Json;
 using IECHClinic.Clases;
 using IECHClinic.Models;
 
-
-
 namespace IECHClinic.Controllers
 {
     //Este controlador nos sirve principalmente para validar el acceso de los usuarios
