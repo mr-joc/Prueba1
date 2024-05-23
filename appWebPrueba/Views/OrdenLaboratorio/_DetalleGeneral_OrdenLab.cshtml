@@ -1,0 +1,77 @@
+﻿@model appWebPrueba.Models.OrdenLaboratorioVM
+
+@{
+    Layout = null;
+}
+@if (Model.intTipoDatoMuestra == 1)
+{
+    <div class="card-header text-white bg-dark mb-3">
+        <h5>Movimientos</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Proceso</th>
+                    <th>Estatus</th>
+                    <th>Usuario</th>
+                    <th>Comentario</th>
+                    <th>Maquina</th>
+                    <th>Fecha y Hora</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.lGridOrdenLaboratorio != null)
+                {
+                    foreach (var item in Model.lGridOrdenLaboratorio)
+                    {
+                        <tr>
+                            <td style="font-size:12px">@item.strProceso</td>
+                            <td style="font-size:12px">@item.strEstatus</td>
+                            <td style="font-size:12px">@item.strUsuarioCompuesto</td>
+                            <td style="font-size:12px">@item.strComentario</td>
+                            <td style="font-size:12px">@item.strMaquina</td>
+                            <td style="font-size:12px">@item.strFechaHora</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@if (Model.intTipoDatoMuestra == 2)
+{
+    <div class="card-header text-white bg-dark mb-3">
+        <h5>Movimientos</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Maquina</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.lGridOrdenLaboratorio != null)
+                {
+                    foreach (var item in Model.lGridOrdenLaboratorio)
+                    {
+                        <tr>
+                            <td style="font-size:12px">@item.intAbonoTrabajo</td>
+                            <td style="font-size:12px">@item.dblCosto.ToString()</td> 
+                            <td style="font-size:12px">@item.strFecha01</td>
+                            <td style="font-size:12px">@item.strUsuario</td>
+                            <td style="font-size:12px">@item.strMaquina</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}

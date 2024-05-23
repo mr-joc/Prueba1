@@ -13,20 +13,21 @@ namespace appWebPrueba.DataAccess
     {
         //Recibimos el ID del rol al que pertenece el usuario que esté logueado
         //Instanciamos una lista, que es lo que devolveremos
-        public static List<Menu> GetMenuByRol(int IDRol)
+        public static List<Menu> GetMenuByRol(int IDRol, int InternalID)
         {
             List<Menu> lMenu = new List<Menu>();
 
             try
             {
-                //Usaremos el ambiente de "cnnAppWebPrueba"
-                Conexion cn = new Conexion("cnnAppWebPrueba");
+                //Usaremos el ambiente de "cnnLabAllCeramicOLD"
+                Conexion cn = new Conexion("cnnLabAllCeramicOLD");
                 //Instanciamos los parámetros
                 List<Parametros> lParams = new List<Parametros>();
                 //Y los asignamos
                 lParams.Add(new Parametros { Nombre = "IDRol", Tipo = SqlDbType.Int, Valor = IDRol });
+                lParams.Add(new Parametros { Nombre = "InternalIDUser", Tipo = SqlDbType.Int, Valor = InternalID });
                 //Asignamos a un DataTable lo que te devuelva el siguiente SP
-                DataTable Results = cn.ExecSP("sp_GetMenuByRol", lParams);
+                DataTable Results = cn.ExecSP("sp_V2_GetMenuByRol", lParams);
                 //y vamos pasando cada nodo a una lista
                 lMenu.AddRange(from DataRow dr in Results.Rows
                                select new Menu
@@ -37,7 +38,7 @@ namespace appWebPrueba.DataAccess
                                    View = dr["ViewVista"].ToString(),
                                    Controller = dr["Controller"].ToString(),
                                    IDRol = byte.Parse(dr["IDRol"].ToString()),
-                                   subMenu = byte.Parse(dr["subMenu"].ToString()),
+                                   subMenu = int.Parse(dr["subMenu"].ToString()),
                                    Orden = byte.Parse(dr["orden"].ToString()),
                                    Nivel = byte.Parse(dr["Nivel"].ToString()),
                                    IsNode = bool.Parse(dr["IsNode"].ToString()),

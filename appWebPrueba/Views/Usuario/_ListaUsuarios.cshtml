@@ -1,0 +1,54 @@
+﻿@model appWebPrueba.Models.UsuarioVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>id de Usuario</th>
+                <th>Clave</th>
+                <th>Nombre</th>
+                <th style="display:none">Apellido Paterno</th>
+                <th style="display:none">Apellido Materno</th>
+                <th>Perfil</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridUsuario != null)
+            {
+                foreach (var item in Model.lGridUsuario)
+                {
+                    <tr>
+                        <td style="font-size:12px">@item.intUsuarioID</td>
+                        <td style="font-size:12px">@item.strUsuario</td>
+                        <td style="font-size:12px">@item.strNombreUsuario</td>
+                        <td style="display:none">@item.strApPaterno</td>
+                        <td style="display:none">@item.strApMaterno</td>
+                        <td style="font-size:12px">@item.strRol</td>
+                        <td style="font-size:12px">
+                            @{
+                                string Elementoi = (@item.Estado == true ? "<span title='Activo'><i class='fas fa-check' style='color: green;'></i></span>" : "<span title='Inactivo'><i class='fas fa-times' style='color: red;'></i></i></span>");
+                            }
+                            @Html.Raw(@Elementoi)
+                        </td>
+                        <td style="font-size:12px">
+                            @if ((item.intUsuarioID == 1) || (item.intUsuarioID == 2))
+                            {
+                                <span title="OK"></span>
+                            }
+                            else
+                            {
+                                <span title='Editar' class='urlEditar' data='@item.intUsuarioID'><i class='fas fa-edit' style='color: #5d9cec;'></i></span>
+                                <span title='Eliminar' class='urlEliminar' data='@item.intUsuarioID'><i class='fas fa-trash' style='color: red;'></i></span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,52 @@
+﻿@model appWebPrueba.Models.ArticuloVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Part Num</th>
+                <th>Descripción</th>
+                <th>UM Entrada</th>
+                <th>Conversión</th>
+                <th>UM Almacén</th>
+                <th>Conversión</th>
+                <th>UM Salida</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridArticulo != null)
+            {
+                foreach (var item in Model.lGridArticulo)
+                {
+            <tr>
+                <td style="font-size:12px">@item.intArticulo</td>
+                <td style="font-size:12px">@item.PartNum</td>
+                <td style="font-size:12px">@item.PartDesc</td>
+                <td style="font-size:12px">@item.strUMCompra</td>
+                <td style="font-size:12px">@item.dblConversionCompraAlmacen</td>
+                <td style="font-size:12px">@item.strUMAlmacen</td>
+                <td style="font-size:12px">@item.dblConversionAlmacenVenta</td>
+                <td style="font-size:12px">@item.strUMVenta</td>
+
+                <td style="font-size:12px">
+                    @{
+                        string Elementoi = (@item.Estado == true ? "<span title='Activo'><i class='fas fa-check' style='color: green;'></i></span>" : "<span title='Inactivo'><i class='fas fa-times' style='color: red;'></i></span>");
+                    }
+                    @Html.Raw(@Elementoi)
+                </td>
+                <td style="font-size:12px">
+                    <span title="Editar" class='urlEditar' data='@item.intArticulo'><i class='fas fa-edit' style='color: #5d9cec;'></i></span>
+                    <span title="Eliminar" class='urlEliminar' data='@item.intArticulo'><i class='fas fa-trash' style='color: red;'></i></span>
+                </td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,82 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.ColorVM
+
+
+<div class="card-body">
+    @Html.HiddenFor(x => Model.Estado)
+
+    @Html.HiddenFor(x => Model.intColorID)
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(y => y.intColorID, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(y => y.intColorID, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombre, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombre, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombre, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.intColorimetro, new { @class = "label-form" })
+            <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                    class="form-control populate mb-3"
+                    name="@Html.NameFor(x => x.Colorimetro.ColorimetroID)"
+                    id="cboColorimetro_E">
+
+                @if (Model.Colorimetro.ColorimetroID != null)
+                {
+                    <option value="@Model.Colorimetro.ColorimetroID">@Model.Colorimetro.NombreColorimetro</option>
+                }
+                else
+                {
+                    <option value="">Seleccione...</option>
+                }
+                @foreach (appWebPrueba.Models.Colorimetro colorimetro in Model.lColorimetro)
+                {
+                    <option value="@colorimetro.ColorimetroID">
+                        @colorimetro.NombreColorimetro
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(y => y.Estado, new { @class = "label-form" })
+            <div class="input-group">
+                <span class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i>
+                            <input type="radio" value="" name="radioActivoE" id="radioActivoE"
+                                   onclick="radioActivoE()">
+                        </i>
+                    </span>
+                </span>
+                <input value="Activo" class="form-control" type="text" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <div class="btn btn-dark float-right" id="GuardaEditColor-btn">
+                Actualizar
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var estado = $(@Html.IdFor(y => Model.Estado)).val();
+
+        if (estado == 'False') { $("#radioActivoE").prop('checked', false); $("#radioActivoE").prop('value', 0); } else { $("#radioActivoE").attr('checked', true); $("#radioActivoE").prop('value', 1); }
+
+
+    });
+</script>
+

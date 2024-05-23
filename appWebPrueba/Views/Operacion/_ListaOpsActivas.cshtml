@@ -1,0 +1,41 @@
+﻿@model appWebPrueba.Models.OperacionVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Operacion</th>
+                <th>Nombre</th>
+                @*<th>Nombre Corto</th>*@
+                <th>Agregar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridOperacion != null)
+            {
+                foreach (var item in Model.lGridOperacion)
+                {
+                    <tr>
+                        <td style="font-size:12px">@item.intOperacion</td>
+                        <td style="font-size:12px">@item.strNombre</td>
+                        @*<td style="font-size:12px">@item.strNombreCorto</td>*@
+                        <td style="font-size:12px">
+                            @if ((item.intOperacion == 1))
+                            {
+                                <span title="OK"></span>
+                            }
+                            else
+                            {
+                                <span title="Agregar operación Back Flush" class='urlAgregaOperacionBF' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-plus-square'></i></span>
+                                <span title="Agregar operación Time & Qty" class='urlAgregaOperacionTQ' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-stopwatch'></i></span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,560 @@
+﻿@using appWebPrueba.DataAccess
+
+@model appWebPrueba.Models.OrdenLaboratorioVM
+
+@{
+    ViewBag.Title = "Armado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-heading bg-dark" style="display:none">
+    <div>
+        Ensamble
+        <small>Ensamble de Persianas </small>
+    </div>
+</div>
+@using (Html.BeginForm("YesoOperacion", "Production", FormMethod.Post, new { @class = "m-form m-form--fit m-form--label-align-right" }))
+{
+    <!-- START card-->
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="TotalesForm-wrapper" class="row">
+                .
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-default">
+                        <div class="card-header text-white bg-dark mb-3">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h5>Trabajo actual</h5>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="input-group">
+                                        <input class="form-control" id="JobNumBuscar" autofocus /> &nbsp;&nbsp;
+                                        <button style="display:none" type="button" class="form-control btn btn-dark" id="RegistraOperacionJOB">Registrar</button>
+                                        <span class="input-group-text" onclick="buscar()" style="background-color: #f0f0f0; border: none; color: white">
+                                            <i class="far text-dark fa-arrow-alt-circle-right"></i>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="CorteForm-wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-default">
+                        <div class="card-header text-white bg-dark mb-3">
+                            <h5>Listado de Ensamble</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="ListaCorteForm-wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- START date widget-->
+                    <div class="card flex-row align-items-center align-items-stretch border-0">
+                        <div class="col-4 d-flex align-items-center text-white  bg-dark justify-content-center rounded-left">
+                            <div class="text-center">
+                                Tiempo
+                            </div>
+                        </div>
+                        <div class="col-8 py-3 rounded-right">
+                            <div class="text-uppercase">Minutos</div>
+                            <br>
+                            <div class="h2 mt-0" id="Cronos">00:00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ListadoPendientesForm-wrapper"></div>
+        </div>
+
+    </div>
+
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <div class="row">
+        <div id="VerAvanceXHora-Modal" class="modal" role="grid">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Avance por Hora</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="ChartForm-wrapper" class="row">
+                        <div class="col-xl-12">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <!-- STACKED BAR CHART -->
+                                    <div class="card card-default card-demo">
+                                        <div class="card-header text-white bg-primary mb-3">
+                                            <a id="ActualizaGrafica-btn" class="float-right" data-tool="card-refresh" data-toggle="tooltip" title="Actualizar">
+                                                <em class="fas fa-sync"></em>
+                                            </a>
+                                            <a class="float-right" href="#" data-tool="card-collapse" data-toggle="tooltip" title="Ocultar">
+                                                <em class="fa fa-minus"></em>
+                                            </a>
+                                            <h5>Estadísticas</h5>
+                                        </div>
+                                        <div class="card-wrapper collapse show">
+                                            <div class="chart">
+                                                <div id="CumplimientoForm-wrapper">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondaryr" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/sweetalert/dist/sweetalert.css" />
+
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- Datatables-->
+    <link rel="stylesheet" href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="~/vendor/holdon/HoldOn.min.css" />
+}
+
+@section Scripts {
+    <script src="~/vendor/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- Datatables-->
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/dataTables.buttons.js"></script>
+    <script src="~/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.colVis.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.flash.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.html5.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.print.js"></script>
+    <script src="~/vendor/datatables.net-keytable/js/dataTables.keyTable.js"></script>
+    <script src="~/vendor/datatables.net-responsive/js/dataTables.responsive.js"></script>
+    <script src="~/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="~/vendor/jszip/dist/jszip.js"></script>
+    <script src="~/vendor/pdfmake/build/pdfmake.js"></script>
+    <script src="~/vendor/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer.js@4.0.2/dist/easytimer.min.js"></script>
+    <script src="~/vendor/holdon/HoldOn.min.js"></script>
+
+    <script type="text/javascript">
+        var timer = new easytimer.Timer();
+
+        var HoldOptions =
+        {
+            theme: "sk-bounce",
+            message: 'Esta cargando la información. ',
+            backgroundColor: "#1847B1",
+            textColor: "white"
+        };
+
+         $(document).ready(function () {
+            timer.addEventListener('secondsUpdated', function (e) {
+                $('#Cronos').html(timer.getTimeValues().toString());
+            });
+            timer.addEventListener('reset', function (e) {
+                $('#Cronos').html(timer.getTimeValues().toString());
+            });
+            timer.addEventListener('started', function (e) {
+                $('#Cronos').html(timer.getTimeValues().toString());
+            });
+        });
+
+            $(document).ready(function () {
+                 JobsPendientesBase();
+            });
+
+        function JobsPendientesBase() {
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("CargarPendientesYesos", "Production")",
+                    datatype: "json",
+                    traditional: true,
+                    success: function (data) {
+                        $('#ListadoPendientesForm-wrapper').html(data);
+                        $('#ListadoPendientesForm-wrapper').fadeIn();
+                    },
+                    error: function (data) {
+                        console.log(data.responseText);
+                        console.log("Error", "Error al obtener los Jobs Pendientes", "error");
+                    }
+                });
+            CargarTotales();
+        }
+
+
+        function CargarTotales() {
+        var HoldOptionsImp =
+              {
+            theme: "sk-bounce",
+            message: 'Espere....',
+                    backgroundColor: "#1847B1",
+                    textColor: "white"
+          };
+          HoldOn.open(HoldOptionsImp);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("LlenarTotales_Yesos", "Production")",
+                data: {
+                    strDepartamento: "YESOS"
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    LimpiaDiv('TotalesForm-wrapper');
+                    $('#TotalesForm-wrapper').html(data);
+                    $('#TotalesForm-wrapper').fadeIn();
+                    HoldOn.close();
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    swal("Error", "No se pudieron cargar los datos, Error 1000", "error");
+                }
+            });
+            //CargarCapacidades();
+        }
+
+        $(document).on("click", "#VerAvanceXHora-Span", function (e) {
+            e.preventDefault();
+
+            $('#VerAvanceXHora-Modal').appendTo("body").modal('show');
+
+
+            var _usuario = "BUSCAR_Actual";
+            var _fechaIni = "01/01/1900";
+            var _fechaFin = "01/01/1900";
+
+            cargarGrafico(_usuario, _fechaIni, _fechaFin);
+
+        });
+
+
+        function cargarGrafico(Usuario, FechaIni, FechaFin) {
+            alert(Usuario + "[--]" + FechaIni + "[--]" +FechaFin);
+        var HoldOptionsImp =
+              {
+            theme: "sk-bounce",
+            message: 'Espere....',
+                    backgroundColor: "#1847B1",
+                    textColor: "white"
+          };
+          HoldOn.open(HoldOptionsImp);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getReporteProductividadXHora_Grafico", "Production")",
+                data: {
+                    Usuario: Usuario,
+                    FechaIni: FechaIni,
+                    FechaFin: FechaFin,
+                    TipoRegistro: "1",
+                    TipoDato: "3"
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    LimpiaDiv('CumplimientoForm-wrapper');
+                    $('#CumplimientoForm-wrapper').html(data);
+                    $('#CumplimientoForm-wrapper').fadeIn();
+                    HoldOn.close();
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    swal("Error", "No se pudieron cargar los datos, elije otra fecha", "error");
+                }
+            });
+    }
+
+
+        @*function MostrarPDF() {
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("Download", "Production")",
+                    data: {
+                        FileName: "PlanERP.pdf"
+                    },
+                    datatype: "json",
+                    traditional: true,
+                    success: function (data) {
+                        $('#ListaCorteForm-wrapper').html(data);
+                        $('#ListaCorteForm-wrapper').fadeIn();
+                    },
+                    error: function (data) {
+                        console.log(data.responseText);
+                        console.log("Error", "Error al cargar Documento", "error");
+                    }
+                });
+            }*@
+
+
+        //function BusquedaJobNum(JobNum, data) {
+        //    var unicos = data.filter(function (e) {
+        //        return JobNum == e.JobNum;
+        //    });
+        //    var Productos = [];
+        //    unicos.map(function (u) {
+        //        Productos.push({ Description: u.Description, PartNum: u.PartNum })
+        //    });
+        //    return Productos
+        //}
+
+        $("#JobNumBuscar").on("keydown", function search(e) {
+            if (e.keyCode == 13) {
+                event.preventDefault();
+                buscar();
+            }
+        });
+
+        function buscar() {
+            $('#RegistraOperacionJOB').click();
+        }
+
+        //////function fnConsultar(datos,idd) {
+        //////    swal({
+        //////        title: "¿Desea Iniciar "+ idd+"?" ,
+        //////        text: "Con esta acción se dara inicio al Tiempo.",
+        //////        type: "info",
+        //////        showCancelButton: true,
+        //////        cancelButtonText: "Cancelar",
+        //////        confirmButtonText: "Iniciar",
+        //////        closeOnConfirm: true
+        //////    }, function () {
+        //////        $('#JobNumBuscar').val(idd);
+        //////        $('#RegistraOperacionJOB').click();
+        //////        $('#' + idd + '').hide();
+        //////        $('#ri-' + idd).show();
+        //////    });
+        //////}
+
+        @*function CargaCorte(datos) {
+            HoldOn.open(HoldOptions);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CargaJobPerfil", "Production")",
+                data: {
+                    Id: datos
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    $('#CorteForm-wrapper').html(data);
+                    $('#CorteForm-wrapper').fadeIn();
+                    HoldOn.close();
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    console.log("Error", "Error al obtener la info, favor de intentarlo más tarde", "error");
+                }
+            });
+        }*@
+
+        @*function ListadoCortes(datos) {
+            timer.reset();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CargaListadoPerfil", "Production")",
+                data: {
+                    Id: datos
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    $('#ListaCorteForm-wrapper').html(data);
+                    $('#ListaCorteForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    console.log("Error", "Error al obtener la info, favor de intentarlo más tarde", "error");
+                }
+            });
+        }*@
+
+        $(document).on("click", "#RegistraOperacionJOB", function (e) {
+            var Job = $('#JobNumBuscar').val();
+            if (Job == "4C04ECC2JE50BJ4697J9431J9145756EB003") {
+                window.location = "../Account/LogOff";
+            }
+
+
+            //SE HACE UN REPLACE PARA QUE, EN CASO DE QUE EL TECLADO NO ESTÉ CONFIGURADO LO TOME POR BUENO
+            var re = /'/g;
+            var JobCorregido = Job.replace(re, "-");
+
+            var HoldOptionsImp =
+              {
+                    theme: "sk-bounce",
+                    message: 'Registrando operacion, por favor sea paciente.',
+                    backgroundColor: "#1847B1",
+                    textColor: "white"
+            };
+
+            $('#' + JobCorregido + '').hide();
+            $('#ri-' + JobCorregido + '').show();
+
+            HoldOn.open(HoldOptionsImp);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("RegistraOperacionJOB", "Production")",
+                data: {
+                    JobNum: JobCorregido,
+                    Operacion: "1"
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        //timer.reset();
+                        //timer.stop();
+                        LimpiaDiv('CorteForm-wrapper');
+                        LimpiaDiv('ListaCorteForm-wrapper');
+                        HoldOn.close();
+                        swal({ title: "Job Leído", text: "Job leído con éxito", timer: 4000, showConfirmButton: false, type: "success" });
+                        if (data.Mensaje == "INICIO") {
+                            swal({ title: "Iniciando " + data.Id, text: "Haz iniciado la operación para la Orden: " + data.Id + ", recuerda escanear al terminar", timer: 4000, showConfirmButton: false, type: "success" });
+
+                            timer.reset();
+                            $('#' + JobCorregido + '').fadeOut();
+                            $('#ri-' + JobCorregido + '').fadeIn();
+                        } else {
+                            if (data.Mensaje == "FIN") {
+                                timer.stop();
+                                swal({ title: "Listo", text: "Entrega la Orden: " + data.Id + " a la siguiente estación", timer: 4000, showConfirmButton: false, type: "success" });
+                                timer.start();
+                                timer.stop();
+                                JobsPendientesBase();
+                            } else {
+                                timer.stop();
+                                swal({ title: "Job " + data.Id + " Terminado", text: "Haz escaneado el cierre del último proceso, recuerda enviar a Empaque.", timer: 5000, showConfirmButton: false, type: "success" });
+                                timer.start();
+                                timer.stop();
+                                JobsPendientesBase();
+
+                            }
+                        }
+                        $('#JobNumBuscar').val("");
+                    } else {
+                        swal({ title: "Error", text: data.Mensaje, timer: 7000, showConfirmButton: false, type:"error" });
+                        HoldOn.close();
+
+                        $('#JobNumBuscar').val("");
+                    }
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    swal("Error", "Se ha producido un error al leer el Job, por favor localice a Sistemas", "error");
+                }
+            });
+        });
+
+        function LimpiaDiv(elementID) {
+            var div = document.getElementById(elementID);
+            timer.stop();
+            while(div.firstChild) {
+                div.removeChild(div.firstChild);
+
+            }
+        }
+
+        @*function reimprimir(id) {
+            var Job = id.replace("ri-", "");
+
+            //SE HACE UN REPLACE PARA QUE, EN CASO DE QUE EL TECLADO NO ESTÉ CONFIGURADO LO TOME POR BUENO
+            var re = /'/g;
+            var JobCorregido = Job.replace(re, "-");
+
+           // alert(Job + "[--]" + JobCorregido);
+            var HoldOptionsImp =
+              {
+                    theme: "sk-bounce",
+                    message: 'Registrando operacion, por favor sea paciente.',
+                    backgroundColor: "#1847B1",
+                    textColor: "white"
+            };
+
+            HoldOn.open(HoldOptionsImp);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EnviaReimpresionJob", "Production")",
+
+                data: {
+                    JobNum: JobCorregido
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        HoldOn.close();
+                        swal({ title: "Job "+data.Id+". Impreso", text: data.Mensaje, timer: 2000, showConfirmButton: false, type: "success" });
+
+                    } else {
+                        swal({ title: "Error", text: data.Mensaje, timer: 7000, showConfirmButton: false, type:"error" });
+                        HoldOn.close();
+
+                        $('#JobNumBuscar').val("");
+                    }
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    swal("Error..", "No se pudo enviar la impresión", "error");
+                }
+            });
+        }*@
+
+    </script>
+}

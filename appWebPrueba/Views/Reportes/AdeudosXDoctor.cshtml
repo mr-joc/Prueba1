@@ -1,0 +1,595 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.ReportesVM
+@{
+    ViewBag.Title = "Adeudos Por Doctor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-heading bg-dark text-white">
+    <div>
+        Adeudos Por Doctor
+    </div>
+</div>
+
+<div class="form-group row content-heading bg-dark text-white">
+    <div class="col-lg-4">
+        @Html.LabelFor(x => x.intDoctor, new { @class = "label-form" })
+        <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                class="form-control populate mb-3"
+                name="@Html.NameFor(x => x.DoctoresR.DoctorID)"
+                id="cboDoctor">
+
+            @if (Model.DoctoresR.DoctorID != null)
+            {
+                <option value="@Model.DoctoresR.DoctorID">@Model.DoctoresR.Nombre</option>
+            }
+            else
+            {
+                <option value="0">Seleccione...</option>
+            }
+            @foreach (appWebPrueba.Models.DoctoresR dresR in Model.lDoctoresR)
+            {
+                <option value="@dresR.DoctorID">
+                    @dresR.Nombre
+                </option>
+            }
+        </select>
+    </div>
+    <div class="col-lg-4">
+        @Html.LabelFor(x => x.intPagado, new { @class = "label-form" })
+        <div class="input-group">
+            <select data-plugin-selectTwodata-minimum-results-for-search="infinity"
+                    class="form-control populate mb-3"
+                    name="@Html.NameFor(x=>x.Pagado.intTipo)"
+                    id="cboPago">
+                @if (Model.Pagado.strNombre != null)
+                {
+                    <option value="@Model.Pagado.intTipo">@Model.Pagado.strNombre</option>
+                }
+                else
+                {
+            <option value="0">Seleccione...</option>
+                }
+                @foreach (appWebPrueba.Models.Pagado pagado in Model.lPagado)
+                {
+                    <option value="@pagado.intTipo">
+                        @pagado.strNombre
+                    </option>
+                }
+            </select>
+            @Html.ValidationMessageFor(model => Model.Pagado.intTipo, "", new
+            {
+            @class = "text-danger"
+            })
+        </div>
+    </div>
+        <div class="col-lg-4">
+            <div title="Buscar..." class="btn btn-success float-xl-center" id="Filtro-Span">
+                &nbsp;Filtrar&nbsp;&nbsp;<em class="fa-sm mr-2 fas fa-search"></em>
+            </div>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-wrapper collapse show">
+            <div class="card-body">
+                <div id="MenuForm-wrapper"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+@*<div class="row">
+    <div id="VistaDetalle-Modal" class="modal" role="grid">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white bg-dark mb-3">
+                    <h4 class="modal-title">Orden:&nbsp;<span id="spOrden"></span></h4>
+                    <button type="button" class="close text-white " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="CreateView-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-header text-white bg-dark mb-3">
+                                        <h5>Capture</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="CreateForm-wrapper"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="EditView-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-body">
+                                        <div id="EditForm-wrapper"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="listado-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-header text-white bg-dark mb-3">
+                                        <h5>Detalle</h5>
+                                    </div>
+                                    <div class="card-wrapper collapse show">
+                                        <div class="card-body">
+                                            <div id="ListadoForm-wrapper"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+@*<div class="row">
+    <div id="Historial-Modal" class="modal" role="grid">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white bg-dark mb-3">
+                    <h4 class="modal-title">Historial del Trabajo &nbsp;<span id="spOrdenLabora"></span></h4>
+                    <button type="button" class="close text-white " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="EncabezadoView-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-body">
+                                        <div id="EncabezadoForm-wrapper"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:none" class="row" id="EditMovsView-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-body">
+                                        <div id="EditMovsForm-wrapper"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="ListadoGral-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-wrapper collapse show">
+                                        <div class="card-body">
+                                            <div id="ListadoGralForm-wrapper"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+@*<div class="row">
+    <div id="Pagos-Modal" class="modal" role="grid">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white bg-dark mb-3">
+                    <h4 class="modal-title">Abonar al Trabajo &nbsp;<span id="spOrdenPago"></span></h4>
+                    <button type="button" class="close text-white " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="EncaView-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-body">
+                                        <div id="EncaForm-wrapper"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="ListGral-wrapper">
+                            <div class="col-lg-12">
+                                <div class="card card-default">
+                                    <div class="card-wrapper collapse show">
+                                        <div class="card-body">
+                                            <div id="ListGralForm-wrapper"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/vendor/sweetalert2/sweetalert2.min.css" />
+
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- Datatables-->
+    <link rel="stylesheet" href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="../css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="~/vendor/holdon/HoldOn.min.css" />
+}
+
+@section Scripts {
+    <script src="~/vendor/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/vendor/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- Datatables-->
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/dataTables.buttons.js"></script>
+    <script src="~/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.colVis.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.flash.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.html5.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.print.js"></script>
+    <script src="~/vendor/datatables.net-keytable/js/dataTables.keyTable.js"></script>
+    <script src="~/vendor/datatables.net-responsive/js/dataTables.responsive.js"></script>
+    <script src="~/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="~/vendor/jszip/dist/jszip.js"></script>
+    <script src="~/vendor/pdfmake/build/pdfmake.js"></script>
+    <script src="~/vendor/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer.js@4.0.2/dist/easytimer.min.js"></script>
+    <script src="~/vendor/holdon/HoldOn.min.js"></script>
+
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+        //ListarAdeudos(0, 0);
+    });
+
+
+        //$(document).on("click", "#btnImpresion", function (e) {
+        //    e.preventDefault();
+        //    Swal.fire({ title: "Pendiente!!", text: "Este apartado aún está en desarrollo.", type: 'info', timer: 10000 });
+        //});
+
+        //$(document).on("click", "#btnEMail", function (e) {
+        //    e.preventDefault();
+        //    Swal.fire({ title: "Pendiente!!", text: "Este apartado aún está en desarrollo.", type: 'info', timer: 10000 });
+        //});
+
+        //function CambiarEstatusODental(Orden) {
+        //    Swal.fire({ title: "Pendiente!!", text: "Este apartado (CambiarEstatusODental) aún está en desarrollo.", type: 'info', timer: 10000 });
+        //}
+
+        //function CargarImg(Orden) {
+        //    Swal.fire({ title: "Pendiente!!", text: "Este apartado (CargarImg) aún está en desarrollo.", type: 'info', timer: 10000 });
+        //}
+
+        //function EstatusProceso(Orden) {
+        //    Swal.fire({ title: "Pendiente!!", text: "Este apartado (EstatusProceso) aún está en desarrollo.", type: 'info', timer: 10000 });
+        //}
+
+
+
+        $(document).on("click", "#Filtro-Span", function (e) {
+            e.preventDefault();
+
+            var _doctor_Busca = document.getElementById('cboDoctor').value;
+            var _pagado_Busca = document.getElementById('cboPago').value;
+
+            ListarAdeudos(_doctor_Busca, _pagado_Busca);
+        });
+
+        function ListarAdeudos(_doctor_Busca, _pagado_Busca) {
+            HoldOn.open({
+                theme: "sk-cube-grid"
+            });
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getGridAdeudosDR", "Reportes")",
+                data: {
+                    intDoctor: _doctor_Busca,
+                    intPagado: _pagado_Busca
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    HoldOn.close();
+                   LimpiaDiv('MenuForm-wrapper');
+                    $('#MenuForm-wrapper').html(data);
+                    $('#MenuForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+    }
+
+
+        function LimpiaDiv(elementID) {
+            var div = document.getElementById(elementID);
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+
+            }
+        }
+
+        @*function DetalleTrabajo(ordenLab) {
+            document.getElementById("spOrden").innerHTML = ordenLab;
+            $('#VistaDetalle-Modal').appendTo("body").modal('show');
+
+            CargaDatosOrden(ordenLab);
+
+        }
+
+        function fnAbonarTrabajo(intOrden, intEstatus) {
+            __empresa = 1;
+
+            document.getElementById("spOrdenPago").innerHTML = intOrden;
+
+            if (intEstatus == 1) {
+                Swal.fire({ title: "Importante.", text: "Este trabajo ya está pagado totalmente.", type: 'info', timer:3000 });
+            } else {
+            }
+            $('#Pagos-Modal').appendTo("body").modal('show');
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("getInfoGeneral_Enc", "OrdenLaboratorio")",
+            data: {
+                intOrdenLab: intOrden,
+                intTipoInfo: "2"
+            },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#EncaForm-wrapper').html(data);
+                $('#EncaForm-wrapper').fadeIn();
+                $('#EncaView-wrapper').fadeIn();
+                HoldOn.close();
+                HPagosDET_OrdenLAb(intOrden);
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+
+        }
+
+        function HPagosDET_OrdenLAb(_idOrden) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getInfoGeneral_Det", "OrdenLaboratorio")",
+                data: {
+                    intOrdenLaboratorioEnc: _idOrden,
+                    intTipoInfo: "2"
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    LimpiaDiv('ListGralForm-wrapper');
+                    $('#ListGralForm-wrapper').html(data);
+                    $('#ListGral-wrapper').fadeIn();
+                    $('#ListGralForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }
+
+
+        $(document).on("click", "#dviAbonar", function (e) {
+            e.preventDefault();
+
+            var _orden = document.getElementById("spOrdenPago").innerHTML;
+            var _monto = document.getElementById('txtMontoAbona').value;
+
+            if (_orden != '' && _monto != '' && _monto != '0' && _orden != undefined && _monto != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AbonoTrabajo_App", "OrdenLaboratorio")",
+                data: {
+                    intOrdenLaboratorioEnc: _orden,
+                    dblMontoPago: _monto
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Abono recibido.", text: "Se abono al Trabajo: " + data.Id + ", la cantidad de $" + _monto+". Correctamente.", type: 'success', timer:6500 });
+                        HoldOn.close();
+                        fnAbonarTrabajo(_orden, 0);
+                    } else {
+                        Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                    }
+                },
+                error: function (data) {
+                    console.log("Ocurrió el siguiente Error:", data.Mensaje, "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+                Swal.fire({ title: 'Faltan datos, por favor verifica que ningun campo este vacío.', type: 'error', });
+        }
+    });
+
+
+        function HistoriaTrabajo(intOrdenLaboratorioEnc) {
+
+            document.getElementById("spOrdenLabora").innerHTML = intOrdenLaboratorioEnc;
+            $('#Historial-Modal').appendTo("body").modal('show');
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("getInfoGeneral_Enc", "OrdenLaboratorio")",
+            data: {
+                intOrdenLab: intOrdenLaboratorioEnc,
+                intTipoInfo: "1"
+            },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#EncabezadoForm-wrapper').html(data);
+                $('#EncabezadoForm-wrapper').fadeIn();
+                $('#EncabezadoView-wrapper').fadeIn();
+                HoldOn.close();
+                HistorialDET_OrdenLAb(intOrdenLaboratorioEnc);
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+
+        }
+
+        function HistorialDET_OrdenLAb(_idOrden) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getInfoGeneral_Det", "OrdenLaboratorio")",
+                data: {
+                    intOrdenLaboratorioEnc: _idOrden,
+                    intTipoInfo: "1"
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    LimpiaDiv('ListadoGralForm-wrapper');
+                    $('#ListadoGralForm-wrapper').html(data);
+                    $('#ListadoGral-wrapper').fadeIn();
+                    $('#ListadoGralForm-wrapper').fadeIn();
+                    //ListadoGral-wrapper / ListadoGralForm-wrapper
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }
+
+        function CargaDatosOrden(_idOrden) {
+        $('#CreateView-wrapper').fadeOut();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditarOrdenLab_SoloVista", "OrdenLaboratorio")",
+            data: { intOrdenLab: _idOrden },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#EditForm-wrapper').html(data);
+                $('#EditForm-wrapper').fadeIn();
+                $('#EditView-wrapper').fadeIn();
+                HoldOn.close();
+                ListarDetXOrdenLab(_idOrden);
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+
+        }
+
+        function ListarDetXOrdenLab(_idOrden) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getDetalleOrdenLab_SoloVista", "OrdenLaboratorio")",
+                data: { intOrdenLaboratorioEnc: _idOrden },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    LimpiaDiv('ListadoForm-wrapper');
+                    $('#ListadoForm-wrapper').html(data);
+                    $('#listado-wrapper').fadeIn();
+                    $('#ListadoForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }
+
+    function CargaProcesos(_Protesis) {
+        var cboProceso = document.getElementById("cboProceso");
+        cboProceso.innerHTML = "";
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetProcesosXProtesis", "OrdenLaboratorio")",
+                dataType: "json",
+                data: { protesis: _Protesis },
+            })
+                .done(function (lista) {
+
+                    lista.forEach(e => {
+                        const option = document.createElement('option');
+                        option.text = e.strNombre;
+                        option.value = e.ProcesoID;
+                        cboProceso.appendChild(option);
+                    })
+                });
+
+        }*@
+
+    </script>
+}

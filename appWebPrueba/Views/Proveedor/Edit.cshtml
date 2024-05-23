@@ -1,0 +1,65 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.ProveedorVM
+
+
+<div class="card-body">
+    @Html.HiddenFor(x => Model.Estado)
+
+    @Html.HiddenFor(x => Model.intProveedorID)
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(y => y.intProveedorID, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(y => y.intProveedorID, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombre, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombre, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombre, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombreCorto, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombreCorto, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombreCorto, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(y => y.Estado, new { @class = "label-form" })
+            <div class="input-group">
+                <span class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i>
+                            <input type="radio" value="" name="radioActivoE" id="radioActivoE"
+                                   onclick="radioActivoE()">
+                        </i>
+                    </span>
+                </span>
+                <input value="Activo" class="form-control" type="text" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <div class="btn btn-dark float-right" id="GuardaEditProveedor-btn">
+                Actualizar
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var estado = $(@Html.IdFor(y => Model.Estado)).val();
+
+        if (estado == 'False') { $("#radioActivoE").prop('checked', false); $("#radioActivoE").prop('value', 0); } else { $("#radioActivoE").attr('checked', true); $("#radioActivoE").prop('value', 1); }
+
+
+    });
+</script>

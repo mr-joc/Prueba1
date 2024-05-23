@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="~/css/bootstrap.css" id="bscss">
     <!-- =============== APP STYLES ===============-->
     <link rel="stylesheet" href="~/css/app.css" id="maincss">
+    <link id="autoloaded-stylesheet" rel="stylesheet" href="~/css/theme-c.css">
     @RenderSection("styles", required: false)
 
     @{
@@ -46,12 +47,15 @@
         //////var Correo = identity.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
         var UserId = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
         var InternalID = identity.Claims.Where(c => c.Type == ClaimTypes.SerialNumber).Select(c => c.Value).SingleOrDefault();
+        var nomRol = identity.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
 
-        List<Menu> lMenu = appWebPrueba.DataAccess.Seguridad.GetMenuByRol(int.Parse(IDRol));
+        List<Menu> lMenu = appWebPrueba.DataAccess.Seguridad.GetMenuByRol(int.Parse(IDRol), int.Parse(InternalID));
+        List<Notificaciones> lNotificaciones = appWebPrueba.DataAccess.Seguridad.GetNoticiasUser(InternalID);
+        var total = lNotificaciones[0].intTotal;
     }
 
 </head>
-<body>
+<body >
     @if (LocalHost)
     {
         <div id="BaseUrl" data-baseurl="@Context.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")"></div>
@@ -62,9 +66,9 @@
     }
     <div class="wrapper">
         <!-- ESTE ES EL MENU INICIA-->
-        <header class="header">
+        <header class="header dark bg-dark">
             <!-- START Top Navbar-->
-            <nav class="navbar topnavbar">
+            <nav class="navbar topnavbar top bg-dark">
                 <!-- START navbar header-->
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#/">
@@ -90,12 +94,92 @@
                         </a>
                     </li>
                     <!-- START lock screen-->
+                    <li class="nav-item d-none d-md-block">
+                        <a id="aSalida" class="nav-link" href="@Url.Action("LogOff", "Account")" title="Salir">
+                            <em class="icon-lock"></em>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-md-block">
+                        <a id="muestraUser1" title="Información de Usuario" class="nav-link" href="javascript:mostrarUsuario()"><em class="icon-user"></em></a>
+                        <a id="muestraUser0" title="Ocultar" style="display:none;" class="nav-link" href="javascript:ocultadUsuario()"><em class="icon-user"></em></a>
+                    </li>
+                    <!-- START Alert menu-->
+                    <li class="nav-item dropdown dropdown-list">
+                        <a class="nav-link dropdown-toggle-nocaret" title="Notificaciones" href="#" data-toggle="dropdown">
+                            @{
+                                string Icono = (@total == 0 ? "icon-bell" : "fas fa-bell");
+                            }
+                            <em class="@Icono"></em>
+                            @{
+                                string TotalMostrar = (@total == 0 ? "" : total.ToString());
+                            }
+                            <span style="background-color:green" class="badge badge-success">@TotalMostrar</span>
+                        </a>
+                        <!-- START Dropdown menu-->
+                        @{
+                            string BadgeCss = (@total == 0 ? "" : "badge-success");
+                        }
+                        <div class="dropdown-menu dropdown-menu-right animated flipInX bg-dark">
+                            <div class="dropdown-item bg-dark">
+                                <!-- START list group-->
+                                <div class="list-group bg-dark">
+                                    <!-- Encabezado-->
+                                    <div class="list-group-item list-group-item-action bg-dark">
+                                        <div style="color: #ffffff;" class="media-body">
+                                            <span class="float-right badge @BadgeCss">@total</span>
+                                            Notificaciones
+                                        </div>
+                                    </div>
+                                    <!-- lista de items-->
+                                    @foreach (var lvl1n in lNotificaciones.Where(w => w.Nivel == 1).OrderBy(o => o.Orden))
+                                    {
+                                        <div class="list-group-item list-group-item-action bg-dark">
+                                            @{
+                                                string target = (@lvl1n.strEnlace == "#" ? "" : "_blank");
+                                            }
+                                            <div class="media">
+                                                <div class="align-self-start mr-2">
+                                                    <a style="color:black; text-decoration:none" href=@lvl1n.strEnlace target="@target">
+                                                        <em class='@lvl1n.strIcono'></em>
+                                                    </a>
+                                                </div>
+                                                <a style="color: black; text-decoration: none" href=@lvl1n.strEnlace target="@target">
+                                                    <div class="media-body">
+                                                        <p style="font:bold; color:#ffffff;" class="m-0">@lvl1n.strTitulo</p>
+                                                        <p style="color:lightgreen;" class="m-0 text-sm">@Html.Raw(lvl1n.strsubTitulo)</p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <!-- Pie de página-->
+                                    <div class="list-group-item list-group-item-action bg-dark">
+                                        <a style="text-align:right; color: #ffffff;" href="https://www.labAlCeramic.com/" target="_blank">
+                                            <div class="bg-dark">
+                                                All Ceramic
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <!-- last list item-->
+                                    @*<div class="list-group-item list-group-item-action">
+                                            <span class="d-flex align-items-center">
+                                                <span class="text-sm">More notifications</span>
+                                                <span class="badge badge-danger ml-auto">14</span>
+                                            </span>
+                                        </div>*@
+                                </div>
+                                <!-- END list group-->
+                            </div>
+                        </div>
+                        <!-- END Dropdown menu-->
+                    </li>
+                    <!-- START lock screen-->
                     <!--
-    <li class="nav-item d-none d-md-block">
-        <a id="aSalida" class="nav-link" href="Url.Action("LogOff", "Account")" title="Salir">
-            <em class="icon-lock"></em>
-        </a>
-    </li> -->
+                    <li class="nav-item d-none d-md-block">
+                        <a id="aSalida" class="nav-link" href="Url.Action("LogOff", "Account")" title="Salir">
+                            <em class="icon-lock"></em>
+                        </a>
+                    </li> -->
                     <!-- END lock screen-->
                     <!-- START Alert menu-->
                     <!-- END Alert menu-->
@@ -110,23 +194,41 @@
         </header>
         <!-- ESTE ES EL MENU TERMINA -->
         <!-- sidebar-->
-        <aside class="aside-container">
+        <aside class="bg-dark aside-container">
             <!-- START Sidebar (left)-->
-            <div class="aside-inner">
+            <div class="bg-dark aside-inner">
                 <!-------------------------------------------------------------------------------------------------------------------------------------->
-                <nav id="menu" class="sidebar" role="navigation">
+                <nav id="menu" class="bg-dark sidebar" role="navigation">
                     <ul class="sidebar-nav">
                         <li class="nav-heading ">
                             <span data-localize="sidebar.heading.HEADER">&nbsp;</span>
                         </li>
                     </ul>
-                    <ul class="sidebar-nav">
+                    <ul class="bg-dark sidebar-nav">
+                        <!-- START user info-->
+                        <li style="display:none; align-content:center" id="userInfo">
+                            <div>
+                                <div class="item user-block">
+                                    <!-- User picture-->
+                                    <div class="user-block-info">
+                                        @{
+                                            string imagen = @InternalID + ".png";
+                                        }
+                                        <img class="rounded-circle" src="~/img/Usuarios/@imagen" title="@UserId" width="140" height="140">
+                                    </div><!-- Name and Job-->
+                                    <div class="user-block-info">
+                                        <span style="color:#ffffff; font:bold;" class="user-block-name">@Nombre</span>
+                                        <span style="color: #ffffff; font: bold; " class="user-block-role">@nomRol</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li><!-- END user info-->
                         @foreach (var lvl1 in lMenu.Where(w => w.Nivel == 1).OrderBy(o => o.Orden))
                         {
                             if (lvl1.IsNode == false)
                             {
                                 <li class="sidebar-subnav-header">
-                                    <a class="sidebar-subnav-header" href=@Url.Action(lvl1.View, lvl1.Controller)>
+                                    <a style="color: #ffffff" class="sidebar-subnav-header" href=@Url.Action(lvl1.View, lvl1.Controller)>
                                         <i class='@lvl1.Icon' aria-hidden="true"></i>
                                         <span>@lvl1.Descripcion</span>
                                     </a>
@@ -134,8 +236,8 @@
                             }
                             else
                             {
-                                <li class=" ">
-                                    <a href="#@lvl1.Descripcion" title="@lvl1.Descripcion" data-toggle="collapse">
+                                <li class="bg-dark">
+                                    <a style="color: #ffffff" class="bg-dark" href="#@lvl1.Descripcion" title="@lvl1.Descripcion" data-toggle="collapse">
                                         <em class="@lvl1.Icon"></em>
                                         <span data-localize="sidebar.nav.DASHBOARD">@lvl1.Descripcion</span>
                                     </a>
@@ -144,33 +246,33 @@
                                         {
                                             if (lvl2.IsNode == false)
                                             {
-                                                <li class=" ">
-                                                    <a href="@Url.Action(lvl2.View, lvl2.Controller, new { Id = lvl2.Parametro })">
+                                                <li class="bg-dark">
+                                                    <a style="color:#ffffff" href="@Url.Action(lvl2.View, lvl2.Controller, new { Id = lvl2.Parametro })">
                                                         <em class="far fa-dot-circle"></em><span>@lvl2.Descripcion</span>
                                                     </a>
                                                 </li>
                                             }
                                             else
                                             {
-                                                <li class=" ">
-                                                    <a href="#multilevel" title="Multilevel" data-toggle="collapse"><em class="far fa-folder-open"></em><span>@lvl2.Descripcion</span></a>
-                                                    <ul class="sidebar-nav sidebar-subnav collapse" id="multilevel">
+                                                <li class="bg-dark">
+                                                    <a style="color:#ffffff" class="bg-dark" href="#multilevel" title="Multilevel" data-toggle="collapse"><em class="far fa-folder-open"></em><span>@lvl2.Descripcion</span></a>
+                                                    <ul class="bg-dark sidebar-nav sidebar-subnav collapse" id="multilevel">
                                                         @foreach (var lvl3 in lMenu.Where(w => w.subMenu == lvl2.IdMenu).OrderBy(o => o.Orden))
                                                         {
                                                             if (lvl3.IsNode == true)//aqui se cambia el modo al contrario, ahora declaramos primero si es nodo
                                                             {
-                                                                <li class=" ">
-                                                                    <a href="#level2" title="@lvl3.Descripcion" data-toggle="collapse">
-                                                                        <em class="far fa-arrow-alt-circle-right"></em><span>@lvl3.Descripcion</span>
+                                                                <li class="bg-dark">
+                                                                    <a style="color:#ffffff" class="bg-dark" href="#level2" title="@lvl3.Descripcion" data-toggle="collapse">
+                                                                        <em class="bg-dark far fa-arrow-alt-circle-right"></em><span>@lvl3.Descripcion</span>
                                                                     </a>
                                                                 </li>
-                                                                <li class=" ">
+                                                                <li class="bg-dark">
                                                                     @foreach (var lvl4 in lMenu.Where(w => w.subMenu == lvl3.IdMenu).OrderBy(o => o.Orden))
                                                                     {
-                                                                        <ul class="sidebar-nav sidebar-subnav collapse" id="level2">
-                                                                            <li class=" ">
-                                                                                <a href="@Url.Action(lvl4.View, lvl4.Controller, new { Id = lvl4.Parametro })" title="@lvl4.Descripcion">
-                                                                                    <span>@lvl4.Descripcion</span>
+                                                                        <ul class="bg-dark sidebar-nav sidebar-subnav collapse" id="level2">
+                                                                            <li class="bg-dark">
+                                                                                <a style="color:#ffffff" class="bg-dark" href="@Url.Action(lvl4.View, lvl4.Controller, new { Id = lvl4.Parametro })" title="@lvl4.Descripcion">
+                                                                                    <span class="bg-dark">@lvl4.Descripcion</span>
                                                                                 </a>
                                                                             </li>
                                                                         </ul>
@@ -179,9 +281,9 @@
                                                             }
                                                             else
                                                             {
-                                                                <li class=" ">
-                                                                    <a href="@Url.Action(lvl3.View, lvl3.Controller, new { Id = lvl3.Parametro })" title="@lvl3.Descripcion">
-                                                                        <em class="far fa-dot-circle"></em><span>@lvl3.Descripcion</span>
+                                                                <li class="bg-dark">
+                                                                    <a style="color:#ffffff" class="bg-dark" href="@Url.Action(lvl3.View, lvl3.Controller, new { Id = lvl3.Parametro })" title="@lvl3.Descripcion">
+                                                                        <em class="bg-dark far fa-dot-circle"></em><span>@lvl3.Descripcion</span>
                                                                     </a>
                                                                 </li>
                                                             }
@@ -226,6 +328,37 @@
             <span>@DateTime.Now.Year</span>
         </footer>
     </div>
+
+
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <div class="row">
+        <div id="Imagen-Modal" class="modal">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>@Nombre</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div>&nbsp;&nbsp;&nbsp;<span>@nomRol</span></div>
+                    <!-- User picture-->
+                    <div>
+                        @{
+                            string imagenGDE = @InternalID + ".png";
+                        }
+                        <img style="align-content:center;" src="~/img/Usuarios/@imagenGDE" title="@UserId">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
     <!-- =============== VENDOR SCRIPTS ===============-->
     <!-- MODERNIZR-->
     <script src="~/vendor/modernizr/modernizr.custom.js"></script>
@@ -268,12 +401,48 @@
 
     <!------------------------------------------------------------------------------------------------------------->
     <!-- =============== SCRIPTS VENDOR, estos son para mostrar el menú de alertas ===============-->
-    <script src="/Vendor/jquery/dist/jquery.js"></script>
-    <script src="/Vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- =============== FIN ===============-->
 
 
+    <script type="text/javascript">
 
-    <!-- ===============================-->
+        var hoy = new Date();
+        var anio = hoy.getFullYear();
+        var mes = hoy.getMonth();
+
+        //if (anio == 2023 && (mes == 6 || mes == 7)) {
+        if (anio >= 2023) {
+            //  alert("estamos en el 2023[--]AÑO: "+anio+" MES: "+mes);
+            mostrarUsuario();
+
+        }
+
+
+        function mostrarUsuario() {
+            document.getElementById("userInfo").style.display = "";
+            document.getElementById("muestraUser0").style.display = "";
+            document.getElementById("muestraUser1").style.display = "none";
+        }
+
+        function ocultadUsuario() {
+            document.getElementById("userInfo").style.display = "none";
+            document.getElementById("muestraUser0").style.display = "none";
+            document.getElementById("muestraUser1").style.display = "";
+        }
+
+
+        $(document).on("click", "#userInfo", function (e) {
+            e.preventDefault();
+
+            $('#Imagen-Modal').appendTo("body").modal('show');
+
+        });
+
+
+    </script>
+
     <!------------------------------------------------------------------------------------------------------------->
 </body>
 

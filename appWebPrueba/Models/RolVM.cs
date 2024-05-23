@@ -6,11 +6,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace appWebPrueba.Models
 {
-
-    /// <summary>
-    /// 12/04/2013
-    /// prueba
-    /// </summary>
     public class RolVM
     {
         //Este sirve para instanciar las columnas de la BD, tanto para guardar como para actualizar

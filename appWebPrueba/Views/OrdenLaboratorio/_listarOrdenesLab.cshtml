@@ -1,0 +1,113 @@
+﻿@using System.Security.Claims
+@using System.Threading
+
+@model appWebPrueba.Models.OrdenLaboratorioVM
+
+@{
+    Layout = null;
+    var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+    var IDRol = identity.Claims.Where(c => c.Type == ClaimTypes.Gender).Select(c => c.Value).SingleOrDefault();
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width:3%">Folio</th>
+                <th>Doctor</th>
+                <th>Paciente</th>
+                <th>Proceso</th>
+                <th>Entrega</th>
+                <th>Retraso</th>
+                <th>Observaciones</th>
+                <th>Estatus</th>
+                <th>E. Proceso</th>
+                <th>Imágenes</th>
+                <th>Abonar $</th>
+                <th>Historial</th>
+                <th>Detalle</th>
+                @if (IDRol == "1" || IDRol == "2")
+                {
+                    <th style="width: 4%">Procesar</th>
+                    <th style="width: 4%">Autorizar</th>
+                }
+                else
+                {
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridOrdenLaboratorio != null)
+            {
+                foreach (var item in Model.lGridOrdenLaboratorio)
+                {
+            <tr>
+                <td style="width: 3%; font-size:12px">@item.intFolio</td>
+                <td style="font-size:12px">@item.strDoctor</td>
+                <td style="font-size:12px">@item.strNombrePaciente</td>
+                <td style="font-size:12px">@item.strProceso</td>
+                <td style="font-size:12px">@item.datEntrega</td>
+                <td style="font-size:12px">@item.intDiasRetraso</td>
+                <td style="font-size:12px">@item.strComentario</td>
+                <td style="font-size:12px">@Html.Raw(item.strAccionEstatus)</td>
+                <td style="font-size:12px">@Html.Raw(item.strEstatusProceso)</td>
+                <td style="font-size:12px">@Html.Raw(item.strAccionImagenes)</td>
+                <td style="font-size:12px">@Html.Raw(item.strAbonarTrabajo)</td>
+                <td style="font-size:12px">@Html.Raw(item.strAccionHistorial)</td>
+                <td style="font-size:12px">@Html.Raw(item.strAccionVerDetalle)</td>
+                @if (IDRol == "1" || IDRol == "2")
+                {
+                    <td style="font-size:12px">
+                        @if (item.intProcesado == "0")
+                        {
+                            <span title="Procesar esta Orden de Trabajo" class='urlConvertir' data='@item.intFolio'>
+                                <img alt="Procesar." border="0" height="32" width="32" src="/Imagenes/Procesar.png">
+                            </span>
+                        }
+                        else
+                        {
+                            <span title="Orden Procesada" data='@item.intFolio'>
+                                <img alt="Procesada." border="0" height="32" width="32" src="/Imagenes/Procesado.png">
+                            </span>
+                        }
+                    </td>
+                }
+                else
+                {
+                }
+
+                @if (IDRol == "1" || IDRol == "2")
+                {
+                    <td style="font-size:12px">
+                        @if (item.intAutorizado == "0")
+                        {
+                            <span title="Autorizar fabricación" class='urlFabricar' data='@item.intFolio'>
+                                <img alt="Procesar." border="0" height="32" width="32" src="/Imagenes/Autorizar.png">
+                            </span>
+                        }
+                        else
+                        {
+                            if (item.intAutorizado == "1")
+                            {
+                                <span title="Orden ya Autorizada" data='@item.intFolio'>
+                                    <img alt="Procesar." border="0" height="32" width="32" src="/Imagenes/Autorizado.png">
+                                </span>
+                            }
+                            else
+                            {
+                                <span title="Falta el proceso de Yesos o no tienes permiso" data='@item.intFolio'>
+                                    <img alt="Procesada." border="0" height="32" width="32" src="/Imagenes/NoAutorizable.png">
+                                </span>
+
+                            }
+                        }
+                    </td>
+                }
+                else
+                {
+                }
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

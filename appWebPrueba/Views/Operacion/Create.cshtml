@@ -1,0 +1,49 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.OperacionVM
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombre, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombre, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombre, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombreCorto, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombreCorto, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombreCorto, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.Estado, new { @class = "label-form" })
+            <div class="input-group">
+                <span class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i>
+                            <input type="radio" value="0" name="radioActivoC" id="radioActivoC"
+                                   onclick="radioActivo()">
+                        </i>
+                    </span>
+                </span>
+                <input value="Activo" class="form-control" type="text" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <div class="btn btn-dark float-right" id="GuardarOperacion-btn">
+                Guardar
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#radioActivoC").attr('checked', true);
+    $("#radioActivoC").prop('value', 1);
+
+</script>

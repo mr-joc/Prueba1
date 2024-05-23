@@ -1,0 +1,37 @@
+﻿@model appWebPrueba.Models.OperacionVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="Display:None;">#</th>
+                <th style="Display:None;">Operación</th>
+                <th>Artículo</th>
+                <th>Cantidad</th>
+                <th>UM</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridOperacion != null)
+            {
+                foreach (var item in Model.lGridOperacion)
+                {
+            <tr>
+                <td style="Display: None; font-size: 12px">@item.intOperacionXTipoTrabajoMaterial</td>
+                <td style="Display: None; font-size: 12px">@item.intOperacionXTipoTrabajo</td>
+                <td style="font-size:12px">@item.PartDesc</td>
+                <td style="font-size:12px">@item.dblCantidad</td>
+                <td style="font-size:12px">@item.UnidadMedidaArt</td>
+                <td style="font-size:12px">
+                    <span title="Eliminar" class='urlEliminaMaterialXTipoTrabajo' data='@item.intOperacionXTipoTrabajoMaterial' dataOperacion='@item.intOperacionXTipoTrabajo'><i class='fa-2x mr-2 fas fa-minus-circle' style='color: #ff0000;'></i></span>
+                </td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

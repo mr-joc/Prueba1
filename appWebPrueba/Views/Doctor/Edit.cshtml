@@ -1,0 +1,149 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.DoctorVM
+
+
+<div class="card-body">
+    @Html.HiddenFor(x => Model.Estado)
+
+    @Html.HiddenFor(x => Model.intDoctorID)
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(y => y.intDoctorID, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(y => y.intDoctorID, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombre, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombre, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombre, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strApPaterno, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strApPaterno, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strApPaterno, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strApMaterno, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strApMaterno, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strApMaterno, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strDireccion, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strDireccion, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strDireccion, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strColonia, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strColonia, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strColonia, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strRFC, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strRFC, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strRFC, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strNombreFiscal, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombreFiscal, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombreFiscal, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.intCP, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.intCP, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.intCP, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strTelefono, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strTelefono, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strTelefono, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strCelular, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strCelular, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strCelular, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strDireccionFiscal, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strDireccionFiscal, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strDireccionFiscal, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.strEMail, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strEMail, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strEMail, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-4">
+            &nbsp;
+        </div>
+        <div class="col-lg-4">
+            &nbsp;
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(y => y.Estado, new { @class = "label-form" })
+            <div class="input-group">
+                <span class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i>
+                            <input type="radio" value="" name="radioActivoE" id="radioActivoE"
+                                   onclick="radioActivoE()">
+                        </i>
+                    </span>
+                </span>
+                <input value="Activo" class="form-control" type="text" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <div class="btn btn-dark float-right" id="GuardaEditDoctor-btn">
+                Actualizar
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var estado = $(@Html.IdFor(y => Model.Estado)).val();
+
+        if (estado == 'False') { $("#radioActivoE").prop('checked', false); $("#radioActivoE").prop('value', 0); } else { $("#radioActivoE").attr('checked', true); $("#radioActivoE").prop('value', 1); }
+
+
+    });
+</script>

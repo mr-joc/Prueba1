@@ -1,0 +1,47 @@
+﻿@model appWebPrueba.Models.ReportesVM
+
+@{
+    Layout = null;
+}
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Doctor</th>
+                <th>Paciente</th>
+                <th>Prótesis</th>
+                <th>Proceso</th>
+                <th>Entrega</th>
+                <th>Retraso</th>
+                <th>Observaciones</th>
+                <th>Estatus</th>
+                <th>Costo</th>
+                <th>Pagado</th>
+                <th>Saldo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridAdeudosXDr != null)
+            {
+                foreach (var item in Model.lGridAdeudosXDr)
+                {
+            <tr>
+                <td style="font-size:12px">@item.intOrdenLaboratorioEnc</td>
+                <td style="font-size:12px">@item.strDoctor</td>
+                <td style="font-size:12px">@item.strNombrePaciente</td>
+                <td style="font-size:12px">@item.strTipoProtesis</td>
+                <td style="font-size:12px">@item.strProceso</td>
+                <td style="font-size:12px">@item.datEntrega</td>
+                <td style="font-size:12px">@item.intDiasRetraso</td>
+                <td style="font-size:12px">@item.strObservaciones</td>
+                <td style="font-size:12px">@item.strEstatus</td>
+                <td style="font-size:12px">@string.Format(" {0:C}", item.dblCosto)</td>
+                <td style="font-size:12px">@string.Format(" {0:C}", item.dblPagado)</td>
+                <td style="font-size:12px">@string.Format(" {0:C}", item.dblSaldo)</td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,458 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.AdministrarMenuVM
+@{
+    ViewBag.Title = "Administrar Perfiles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-heading bg-dark text-white">
+    <div>
+        Permisos
+    </div>
+</div>
+
+<!-- START card-->
+<div class="row">
+    <div class="col-lg-12">
+        @*<div style="display:none" class="row" id="CreateView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Alta de Usuarios</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="CreateForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        @*<div class="row" id="EditView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Editar Usuario</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="EditForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Perfil:</h5>
+                        <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                                class="form-control populate mb-3"
+                                name="@Html.NameFor(x => x.PerfilAdmin.PerfilID)"
+                                id="cboRol" onchange="javascript: cargaMenu();">
+
+                            @if (Model.PerfilAdmin.PerfilID != null)
+                            {
+                                <option value="@Model.PerfilAdmin.PerfilID">@Model.PerfilAdmin.NombrePerfil</option>
+                            }
+                            else
+                            {
+                                <option value="">Seleccione...</option>
+                            }
+                            @foreach (appWebPrueba.Models.PerfilAdmin perfil in Model.lPerfilAdmin)
+                            {
+                                <option value="@perfil.PerfilID">
+                                    @perfil.NombrePerfil
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="card-wrapper collapse show">
+                        <div class="card-body">
+                            <div id="MenuForm-wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/vendor/sweetalert2/sweetalert2.min.css" />
+
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- Datatables-->
+    <link rel="stylesheet" href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="../css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="~/vendor/holdon/HoldOn.min.css" />
+}
+
+@section Scripts {
+    <script src="~/vendor/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/vendor/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- Datatables-->
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/dataTables.buttons.js"></script>
+    <script src="~/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.colVis.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.flash.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.html5.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.print.js"></script>
+    <script src="~/vendor/datatables.net-keytable/js/dataTables.keyTable.js"></script>
+    <script src="~/vendor/datatables.net-responsive/js/dataTables.responsive.js"></script>
+    <script src="~/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="~/vendor/jszip/dist/jszip.js"></script>
+    <script src="~/vendor/pdfmake/build/pdfmake.js"></script>
+    <script src="~/vendor/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer.js@4.0.2/dist/easytimer.min.js"></script>
+    <script src="~/vendor/holdon/HoldOn.min.js"></script>
+
+    <script type="text/javascript">
+        $("#radioActivoC").attr('checked', true);
+
+        function radioActivoE() { if (document.getElementById('radioActivoE').value == 0) { $("#radioActivoE").prop('checked', true); $("#radioActivoE").prop('value', 1); } else { $("#radioActivoE").prop('checked', false); $("#radioActivoE").prop('value', 0); } }
+
+        function radioActivoC() { if (document.getElementById('radioActivoC').value == 0) { $("#radioActivoC").prop('checked', true); $("#radioActivoC").prop('value', 1); } else { $("#radioActivoC").prop('checked', false); $("#radioActivoC").prop('value', 0); } }
+
+
+
+    function buscar() {
+        }
+
+        function cargaMenu() {
+            var rol = document.getElementById('cboRol').value;
+            ListarMenu(0, rol);
+        }
+
+    function create() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Create", "Usuario")",
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#CreateForm-wrapper').html(data);
+                $('#CreateForm-wrapper').fadeIn();
+                HoldOn.close();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        /* $('#EditView-wrapper').fadeOut();*/
+        ListarMenu(0, 0);
+        //create();
+    });
+
+        //int InternalID, int intRol
+        function ListarMenu(internalID, introl) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getGridAdministrarMenu", "AdministrarMenu")",
+                data: { InternalID: internalID, intRol: introl},
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                   LimpiaDiv('MenuForm-wrapper');
+                    $('#MenuForm-wrapper').html(data);
+                    $('#MenuForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }
+
+        //
+        $(document).on("click", ".urlAgregar_ListMenu", function (e) {
+
+            var perfil = document.getElementById('cboRol').value;
+
+        e.preventDefault();
+   /*     $('#CreateView-wrapper').fadeOut();*/
+            var ID = $(this).attr("data");
+            console.log(ID);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AgregaPermisosPerfil", "AdministrarMenu")",
+            data: {
+                intMenuReal:0,
+                strDesgloseMenu: ID,
+                Perfil: perfil
+            },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+               // Swal.fire({ title: "Listo", text: "OK", type: 'info', });
+                Swal.fire({ title: "Datos actualizados", text: data.Mensaje, type: 'info', timer: 300 });
+                HoldOn.close();
+                cargaMenu();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+
+        });
+
+        $(document).on("click", ".urlEditar", function (e) {
+        e.preventDefault();
+        /*$('#CreateView-wrapper').fadeOut();*/
+            var ID = $(this).attr("data");
+            console.log(ID);
+        $.ajax({
+            type: "POST",
+            @*url: "@Url.Action("EditarUsuario", "Usuario")",*@
+            data: { UsuarioID: ID },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#EditForm-wrapper').html(data);
+                $('#EditForm-wrapper').fadeIn();
+               /* $('#EditView-wrapper').fadeIn();*/
+                HoldOn.close();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+
+    });
+
+        $(document).on("click", ".urlEliminar_ListMenu", function (e) {
+        e.preventDefault();
+            var ID = $(this).attr("data");
+            var rol = document.getElementById('cboRol').value;
+        Swal.fire({
+            title: '¿Desesa quitar permisos para este Perfil?',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("EliminarMenuUnico", "AdministrarMenu")",
+                    datatype: "json",
+                    traditional: true,
+                    data: {
+                        intMenuElimina: ID,
+                        intPerfil: rol
+                    },
+                    beforeSend: function () {
+                        HoldOn.open({
+                            theme: "sk-cube-grid"
+                        });
+                    },
+                    complete: function () {
+                        HoldOn.close();
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data)
+                        if (data.OK) {
+                            HoldOn.close();
+                            cargaMenu();
+                            Swal.fire({ title: "Listo", text: "Permiso eliminado", type: 'info', });
+                        } else {
+                            Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                        }
+                    },
+                    error: function (data) {
+                        console.log("Error", "Error al eliminar este Permiso.", "error");
+                        HoldOn.close();
+                    }
+                });
+            }
+        });
+    });
+
+        $(document).on("click", "#GuardaEditUsuario-btn", function (e) {
+        e.preventDefault();
+            var EditarEmpleado = $('#EditForm-wrapper :input').serializeArray();
+            var ID;
+            var claveUSR;
+            var password;
+            var nombres;
+            var appaterno;
+            var apmaterno;
+            var perfil = document.getElementById('cboRol_E').value;
+            var activo = document.getElementById('radioActivoE').value;
+
+            EditarEmpleado.map(function (empleado) {
+                if (empleado.name === "intUsuario") {
+                    ID = empleado.value;
+                }
+                if (empleado.name === "strUsuario") {
+                    claveUSR = empleado.value;
+                }
+                if (empleado.name === "strContrasena") {
+                    password = empleado.value;
+                }
+                if (empleado.name === "strNombre_Usuario") {
+                    nombres = empleado.value;
+                }
+                if (empleado.name === "strApPaterno_Usuario") {
+                    appaterno = empleado.value;
+                }
+                if (empleado.name === "strApMaterno_Usuario") {
+                    apmaterno = empleado.value;
+                }
+            });
+
+           // alert("ID:" + ID + "[--]claveUSR:" + claveUSR + "[--]password:" + password + "[--]nombres:" + nombres + "[--]appaterno:" + appaterno + "[--]apmaterno:" + apmaterno + "[--]perfil:" + perfil + "[--]activo:" + activo);
+
+            if (ID != '' && claveUSR != '' && password != '' && nombres != '' && appaterno != '' && apmaterno != '' && ID != undefined && claveUSR != undefined && password != undefined && nombres != undefined && appaterno != undefined && apmaterno != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GuardaEditUsuario", "Usuario")",
+                data: {
+                    UsuarioID: ID,
+                    ClaveUsuario: claveUSR,
+                    Nombres: nombres,
+                    ApPaterno: appaterno,
+                    ApMaterno: apmaterno,
+                    Password: password,
+                    Rol: perfil,
+                    Activo: activo
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos actualizados", text: data.Mensaje, type: 'success', });
+                        HoldOn.close();
+                        //$('#EditView-wrapper').fadeOut();
+                        //$('#EditForm-wrapper').fadeOut();
+                        ListarUsuarios();
+                      /*  $('#CreateView-wrapper').fadeIn();*/
+                    }
+                },
+                error: function (data) {
+                    console.log("Error", "Error al eliminar la Mesa.", "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Faltan datos, por favor verifica que ningun campo este vacío.',
+                type: 'error',
+            });
+        }
+
+
+    });
+
+
+            $(document).on("click", "#GuardarEmpleado-btn", function (e) {
+        e.preventDefault();
+            @*var claveUSR =  $(@Html.IdFor(x => x.strUsuario)).val();
+            var nombres =  $(@Html.IdFor(x => x.strNombre_Usuario)).val();
+            var apPaterno = $(@Html.IdFor(x => x.strApPaterno_Usuario)).val();
+            var apMaterno = $(@Html.IdFor(x => x.strApMaterno_Usuario)).val();
+            var password = $(@Html.IdFor(x => x.strContrasena)).val();*@
+            var rol = document.getElementById('cboRol').value;
+
+            var activo = document.getElementById('radioActivoC').value;
+
+              //  alert("nombre:" + nombres + "[--]apPaterno:" + apPaterno + "[--]apMaterno:" + apMaterno + "[--]NumEmpleado:" + NumEmpleado + "[--]rol:" + rol + "[--]activo:" + activo);
+
+            if (nombres != '' && apPaterno != '' && nombres != undefined && apPaterno != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GuardarUsuario", "Usuario")",
+                data: {
+                    ClaveUsuario: claveUSR,
+                    Nombres: nombres,
+                    ApPaterno: apPaterno,
+                    ApMaterno: apMaterno,
+                    Password: password,
+                    Rol: rol,
+                    Activo: activo,
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos guardados", text: data.Mensaje, type: 'success', });
+                        HoldOn.close();
+                        ListarUsuarios();
+                        create();
+                    } else {
+                        Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                    }
+                },
+                error: function (data) {
+                    console.log("Ocurrió el siguiente Error:", data.Mensaje, "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+                Swal.fire({ title: 'Faltan datos, por favor verifica que ningun campo este vacío.', type: 'error', });
+        }
+    });
+
+
+        function LimpiaDiv(elementID) {
+            var div = document.getElementById(elementID);
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+
+            }
+        }
+
+    </script>
+}

@@ -1,0 +1,332 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.OrdenLaboratorioVM
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.intFolio, new { @class = "label-form" })
+            @*<div title="Buscar..." class="btn btn-success float-xl-right" id="Ayuda-Span">
+                &nbsp;&nbsp;<em class="fa-sm mr-2 fas fa-search"></em>
+            </div>*@
+            <div class="input-group">
+                @Html.HiddenFor(x => x.intFolio)
+                @Html.TextBoxFor(x => x.intFolio, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+            @Html.ValidationMessageFor(x => x.intFolio, "", new { @class = "text-danger" })
+
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.datFechaElabora, new { @class = "label-form"})
+            <div class="input-group">
+                <input class="form-control" readonly type="date" value=@Model.datFechaAlta.ToString("yyyy-MM-dd") />
+            </div>
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(x => x.datFechaEntrega, new { @class = "label-form" })
+            <div class="input-group">
+                @*@Html.TextBoxFor(x => x.datFechaEntrega, new { @type = "date", @class = "form-control" })*@
+                <input class="form-control" readonly type="date" value=@Model.datFechaEntrega.ToString("yyyy-MM-dd") />
+            </div>
+            @Html.ValidationMessageFor(x => x.datFechaEntrega, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.intDoctor, new { @class = "label-form" })
+            <select readonly disabled data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                    class="form-control populate mb-3"
+                    name="@Html.NameFor(x => x.Doctores.DoctorID)"
+                    id="cboDoctor_E">
+
+                @if (Model.Doctores.DoctorID != null)
+                {
+                    <option value="@Model.Doctores.DoctorID">@Model.Doctores.Nombre</option>
+                }
+                else
+                {
+                    <option value="">Seleccione...</option>
+                }
+                @foreach (appWebPrueba.Models.Doctores dres in Model.lDoctores)
+                {
+                    <option value="@dres.DoctorID">
+                        @dres.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.strNombrePaciente, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.strNombrePaciente, new { @type = "text", @class = "form-control", @readonly = "readonly" })
+            </div>
+            @Html.ValidationMessageFor(x => x.strNombrePaciente, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.intTipoProtesis, new { @class = "label-form" })
+            <select readonly disabled  data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                    class="form-control populate mb-3"
+                    name="@Html.NameFor(x => x.Protesis.TipoProtesisID)"
+                    id="cboProtesis_E"
+                    onchange="CargaProcesos(this.value)">
+
+                @if (Model.Protesis.TipoProtesisID != null)
+                {
+                    <option value="@Model.Protesis.TipoProtesisID">@Model.Protesis.Nombre</option>
+                }
+                else
+                {
+                    <option value="">Seleccione...</option>
+                }
+                @foreach (appWebPrueba.Models.Protesis protesis in Model.lProtesis)
+                {
+                    <option value="@protesis.TipoProtesisID">
+                        @protesis.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.intProceso, new { @class = "label-form" })
+            <div class="input-group">
+                <select readonly disabled  data-plugin-selectTwodata-minimum-results-for-search="infinity"
+                        class="form-control populate mb-3"
+                        name="@Html.NameFor(x=>x.ProcesoXProtesis.ProcesoID)"
+                        id="cboProceso_E">
+                    @if (Model.ProcesoXProtesis.strNombre != null)
+                    {
+                        <option value="@Model.ProcesoXProtesis.ProcesoID">@Model.ProcesoXProtesis.strNombre</option>
+                    }
+                    else
+                    {
+                        <option value="0"></option>
+                    }
+                    @foreach (appWebPrueba.Models.ProcesoXProtesis procesoXProtesis in Model.lProcesoXProtesis)
+                    {
+                        <option value="@procesoXProtesis.ProcesoID">
+                            @procesoXProtesis.strNombre
+                        </option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => Model.ProcesoXProtesis.ProcesoID, "", new
+                {
+                @class = "text-danger"
+                })
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.intColorimetro, new { @class = "label-form" })
+            <select readonly disabled  data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                    class="form-control populate mb-3"
+                    name="@Html.NameFor(x => x.Colorimetros.ColorimetroID)"
+                    id="cboColorimetro_E"
+                    onchange="CargaColores(this.value)">
+
+                @if (Model.Colorimetros.ColorimetroID != null)
+                {
+                    <option value="@Model.Colorimetros.ColorimetroID">@Model.Colorimetros.Nombre</option>
+                }
+                else
+                {
+                    <option value="">Seleccione...</option>
+                }
+                @foreach (appWebPrueba.Models.Colorimetros colorimetros in Model.lColorimetros)
+                {
+                    <option value="@colorimetros.ColorimetroID">
+                        @colorimetros.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.intColor, new { @class = "label-form" })
+            <div class="input-group">
+                <select readonly disabled  data-plugin-selectTwodata-minimum-results-for-search="infinity"
+                        class="form-control populate mb-3"
+                        name="@Html.NameFor(x=>x.ColoresXCol.intColor)"
+                        id="cboColor_E">
+                    @if (Model.ColoresXCol.strNombre != null)
+                    {
+                        <option value="@Model.ColoresXCol.intColor">@Model.ColoresXCol.strNombre</option>
+                    }
+                    else
+                    {
+                        <option value="0"></option>
+                    }
+                    @foreach (appWebPrueba.Models.ColoresXCol coloresXcolor in Model.lColoresXCol)
+                    {
+                        <option value="@coloresXcolor.intColor">
+                            @coloresXcolor.strNombre
+                        </option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => Model.ColoresXCol.intColor, "", new
+                {
+                @class = "text-danger"
+                })
+            </div>
+        </div>
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.dblPrecio, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.dblPrecio, new { @type = "number", @class = "form-control", @min = "3", @max = "120", @readonly = "readonly" })
+            </div>
+            @Html.ValidationMessageFor(x => x.dblPrecio, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3">
+            @Html.LabelFor(x => x.intEdad, new { @class = "label-form" })
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.intEdad, new { @type = "number", @class = "form-control", @min = "3", @max = "120", @readonly = "readonly" })
+            </div>
+            @Html.ValidationMessageFor(x => x.intEdad, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-lg-3">
+        @Html.HiddenFor(x => x.intSexo)
+        Sexo
+        <div class="input-group">
+            <select readonly disabled  data-plugin-selectTwodata-minimum-results-for-search="infinity" class="form-control populate mb-3" name="cboSexo_E" id="cboSexo_E">
+                <option value="0">Seleccione...</option>
+                <option value="1">Mujer</option>
+                <option value="2">Hombre</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        @Html.HiddenFor(x => x.intConGarantia)
+        @Html.LabelFor(x => x.intConGarantia, new { @class = "label-form", @readonly = "readonly" })
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span>
+                    <i>
+                        <input readonly disabled type="radio" value="0" name="radioGarantiaE" id="radioGarantiaE"
+                               onclick="radioGarantiaE()">
+                    </i>
+                </span>
+            </span>&nbsp;Si
+        </div>
+    </div>
+    <div class="col-lg-3">
+        @Html.HiddenFor(x => x.intUrgente)
+        @Html.LabelFor(x => x.intUrgente, new { @class = "label-form" })
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span>
+                    <i>
+                        <input readonly disabled type="radio" value="0" name="radioUrgenteE" id="radioUrgenteE"
+                               onclick="radioUrgenteE()">
+                    </i>
+                </span>
+            </span>&nbsp;Si
+        </div>
+    </div>
+    <div class="col-lg-3">
+        @Html.HiddenFor(x => x.intFactura)
+        @Html.LabelFor(x => x.intFactura, new { @class = "label-form" })
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span>
+                    <i>
+                        <input readonly disabled type="radio" value="0" name="radioFacturaE" id="radioFacturaE"
+                               onclick="radioFacturaE()">
+                    </i>
+                </span>
+            </span>&nbsp;Si
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-lg-6">
+        @Html.LabelFor(x => x.strComentario, new { @class = "label-form" })
+        <div class="input-group">
+            @Html.TextAreaFor(x => x.strComentario, new { @type = "number", @class = "form-control", @readonly = "readonly" })
+        </div>
+        @Html.ValidationMessageFor(x => x.strComentario, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-6">
+        @Html.LabelFor(x => x.strObservaciones, new { @class = "label-form" })
+        <div class="input-group">
+            @Html.TextAreaFor(x => x.strObservaciones, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+        @Html.ValidationMessageFor(x => x.strObservaciones, "", new { @class = "text-danger" })
+    </div>
+</div>
+@*<div class="form-group row">
+    <div class="col-lg-10">
+        <input style="display:none" id="txtOrdenLabEnc" type="text" value=@Model.intOrdenLaboratorioEnc />
+        <div class="btn btn-dark float-right" id="AgregaDetalle-btn">
+            Agregar Detalle
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="btn btn-dark float-right" id="GuardaEditOrdenLaboratorio-btn">
+            Guardar
+        </div>
+    </div>
+</div>*@
+
+<script type="text/javascript">
+    var _sexo = $(@Html.IdFor(x => x.intSexo)).val();
+    //alert("_sexo:" + _sexo);
+    document.getElementById("cboSexo_E").value = _sexo;
+
+        var ConGarantia = $(@Html.IdFor(x => x.intConGarantia)).val();
+        var Urgente = $(@Html.IdFor(x => x.intUrgente)).val();
+    var Factura = $(@Html.IdFor(x => x.intFactura)).val();
+
+    //alert("ConGarantia:" + ConGarantia);
+    //alert("Urgente:" + Urgente);
+    //alert("Factura:" + Factura);
+
+    if (ConGarantia == '0') { $("#radioGarantiaE").prop('checked', false); $("#radioGarantiaE").prop('value', 0); } else { $("#radioGarantiaE").attr('checked', true); $("#radioGarantiaE").prop('value', 1); }
+    if (Urgente == '0') { $("#radioUrgenteE").prop('checked', false); $("#radioUrgenteE").prop('value', 0); } else { $("#radioUrgenteE").attr('checked', true); $("#radioUrgenteE").prop('value', 1); }
+    if (Factura == '0') { $("#radioFacturaE").prop('checked', false); $("#radioFacturaE").prop('value', 0); } else { $("#radioFacturaE").attr('checked', true); $("#radioFacturaE").prop('value', 1); }
+
+
+
+    function CargaColores(_Colorimetro) {
+        var cboColor_E = document.getElementById("cboColor_E");
+        cboColor_E.innerHTML = "";
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetcoloresXColorimetro", "OrdenLaboratorio")",
+                dataType: "json",
+                data: { colorimetro: _Colorimetro },
+            })
+                .done(function (lista) {
+
+                    lista.forEach(e => {
+                        const option = document.createElement('option');
+                        option.text = e.strNombre;
+                        option.value = e.ColorimetroID;
+                        cboColor_E.appendChild(option);
+                    })
+                });
+
+    }
+
+    function CargaProcesos(_Protesis) {
+        var cboProceso_E = document.getElementById("cboProceso_E");
+        cboProceso_E.innerHTML = "";
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetProcesosXProtesis", "OrdenLaboratorio")",
+                dataType: "json",
+                data: { protesis: _Protesis },
+            })
+                .done(function (lista) {
+
+                    lista.forEach(e => {
+                        const option = document.createElement('option');
+                        option.text = e.strNombre;
+                        option.value = e.ProcesoID;
+                        cboProceso_E.appendChild(option);
+                    })
+                });
+
+        }
+
+</script>

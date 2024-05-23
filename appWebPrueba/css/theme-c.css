@@ -11,12 +11,13 @@ body, .wrapper .section-container {
    Component: top-navbar
  ========================================================================== */
 .topnavbar {
-  background-color: #7266ba;
-  background-image: linear-gradient(to right, #7266ba 0%, #9289ca 100%);
-  background-repeat: repeat-x; }
+    background-color: #454545;
+    background-image: linear-gradient(to right, #2d3140 0%, #3a3f51 100%);
+    background-repeat: repeat-x;
+}
   @media (min-width: 992px) {
     .topnavbar .navbar-nav > .nav-item.show > .nav-link, .topnavbar .navbar-nav > .nav-item.show > .nav-link:hover, .topnavbar .navbar-nav > .nav-item.show > .nav-link:focus {
-      box-shadow: 0 -3px 0 #5f51b0 inset; } }
+      box-shadow: 0 -3px 0 #454545 inset; } }
   .topnavbar .navbar-nav > .nav-item > .navbar-text {
     color: #fff; }
   .topnavbar .navbar-nav > .nav-item > .nav-link,
@@ -25,9 +26,9 @@ body, .wrapper .section-container {
     .topnavbar .navbar-nav > .nav-item > .nav-link:hover, .topnavbar .navbar-nav > .nav-item > .nav-link:focus,
     .topnavbar .navbar-nav > .nav-item.show > .nav-link:hover,
     .topnavbar .navbar-nav > .nav-item.show > .nav-link:focus {
-      color: #443a80; }
+      color: #ffffff; }
   .topnavbar .dropdown-item.active, .topnavbar .dropdown-item:active {
-    background-color: #7266ba; }
+    background-color: #454545; }
 
 /* ========================================================================
    Component: sidebar

@@ -1,0 +1,80 @@
+﻿@model appWebPrueba.Models.OperacionVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="font-size:12px; display:none;">Operacion</th>
+                <th>Sequencia</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridOperacion != null)
+            {
+                if (Model.lGridOperacion.Count > 0)
+                {
+                    foreach (var item in Model.lGridOperacion)
+                    {
+                        <tr>
+                            <td style="font-size:12px; display:none;">@item.intOperacion</td>
+                            <td style="font-size:12px">@item.Seq</td>
+                            <td style="font-size:12px">@item.TypeOper</td>
+                            <td style="font-size:12px">@item.Desc</td>
+                            <td style="font-size:12px">
+                                @if ((item.Seq == "5") || (item.Seq == "10"))
+                                {
+                                    if (item.Seq == "5")
+                                    {
+                                        <span title="No se Elimina" data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-minus-circle'></i></span>
+                                        <span title="Operacion Fija" data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-dot-circle'></i></span>
+                                        <span title="Operacion Fija" data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-dot-circle'></i></span>
+                                        <span title="Agregar Materiales" class='urlMateriales' data='@item.intOperacionXTipoTrabajo' data_Desc='@item.Desc' data_DescTipoTrabajo='@item.DescTrabajo'><i class='fa-2x mr-2 fas fa-cogs'></i></span>
+
+                                    }
+                                    else
+                                    {
+                                        <span title="Eliminar" class='urlEliminaOpTrabajo' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-minus-circle' style='color: #ff0000;'></i></span>
+                                        <span title="No se puede subir" data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-dot-circle'></i></span>
+                                        <span title="Bajar" class='urlBajaOperacion' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-arrow-alt-circle-down'></i></span>
+                                        <span title="Agregar Materiales" class='urlMateriales' data='@item.intOperacionXTipoTrabajo' data_Desc='@item.Desc' data_DescTipoTrabajo='@item.DescTrabajo'><i class='fa-2x mr-2 fas fa-cogs'></i></span>
+
+                                    }
+                                }
+                                else
+                                {
+                                    if (item.intUltimaOperacion == item.Seq)
+                                    {
+                                        <span title="Eliminar" class='urlEliminaOpTrabajo' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-minus-circle' style='color: #ff0000;'></i></span>
+                                        <span title="Subir" class='urlSubeOperacion' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-arrow-alt-circle-up'></i></span>
+                                        <span title="Esta es la última operacion" data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-dot-circle'></i></span>
+                                        <span title="Agregar Materiales" class='urlMateriales' data='@item.intOperacionXTipoTrabajo' data_Desc='@item.Desc' data_DescTipoTrabajo='@item.DescTrabajo'><i class='fa-2x mr-2 fas fa-cogs'></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span title="Eliminar" class='urlEliminaOpTrabajo' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-minus-circle' style='color: #ff0000;'></i></span>
+                                        <span title="Subir" class='urlSubeOperacion' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-arrow-alt-circle-up'></i></span>
+                                        <span title="Bajar" class='urlBajaOperacion' data='@item.intOperacion'><i class='fa-2x mr-2 fas fa-arrow-alt-circle-down'></i></span>
+                                        <span title="Agregar Materiales" class='urlMateriales' data='@item.intOperacionXTipoTrabajo' data_Desc='@item.Desc' data_DescTipoTrabajo='@item.DescTrabajo'><i class='fa-2x mr-2 fas fa-cogs'></i></span>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" align="center" style="font-size:22px">Vacío...</td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+</div>

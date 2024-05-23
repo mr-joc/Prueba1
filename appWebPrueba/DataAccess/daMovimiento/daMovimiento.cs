@@ -16,7 +16,7 @@ namespace appWebPrueba.DataAccess.daMovimiento
             Resultado res = new Resultado();
             List<Parametros> lParams = new List<Parametros>();
             //Nos conectamos haciendo uso de este ambiente
-            Conexion cn = new Conexion("cnnAppWebPrueba");
+            Conexion cn = new Conexion("cnnLabAllCeramic");
             try
             {
                 //Asignamos los parámetros a la lista
@@ -52,7 +52,7 @@ namespace appWebPrueba.DataAccess.daMovimiento
             Resultado res = new Resultado();
             List<Parametros> lParams = new List<Parametros>();
             //Vamos a usar este ambiente
-            Conexion cn = new Conexion("cnnAppWebPrueba");
+            Conexion cn = new Conexion("cnnLabAllCeramic");
             //Instanciamos el modelo de Movimiento
             MovimientoVM movimiento = new MovimientoVM();
             //Instanciamos el modelo de Rol, tenemos que identificar el código repetido y optimizarlo.
@@ -116,7 +116,7 @@ namespace appWebPrueba.DataAccess.daMovimiento
             {
                 List<Parametros> lParams = new List<Parametros>();
                 //Usamos el mismo ambiente de siempre
-                Conexion cn = new Conexion("cnnAppWebPrueba");
+                Conexion cn = new Conexion("cnnLabAllCeramic");
                 //Mandamos llamar al SP
                 DataTable Results = cn.ExecSP("qry_ListarRolesActivos_SEL", lParams);
                 //Cargamos la lista de rol con el resultado
@@ -147,7 +147,7 @@ namespace appWebPrueba.DataAccess.daMovimiento
             try
             {
                 List<Parametros> lParams = new List<Parametros>();
-                Conexion cn = new Conexion("cnnAppWebPrueba");
+                Conexion cn = new Conexion("cnnLabAllCeramic");
                 //Mandamos llamar el siguiente SP
                 DataTable Results = cn.ExecSP("qry_ListarMeses_SEL", lParams);
                 //y el resultado lo usamos para llenar la lista de meses

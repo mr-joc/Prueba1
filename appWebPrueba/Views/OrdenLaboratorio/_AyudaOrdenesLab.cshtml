@@ -1,0 +1,38 @@
+﻿@model appWebPrueba.Models.OrdenLaboratorioVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Fecha</th>
+                <th>Orden</th>
+                <th>Doctor</th>
+                <th>Protesis</th>
+                <th>Seleccionar</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridOrdenLaboratorio != null)
+            {
+                foreach (var item in Model.lGridOrdenLaboratorio)
+                {
+            <tr>
+                <td style="font-size:12px">@item.intFolio</td>
+                <td style="font-size:12px">@item.strFecha</td>
+                <td style="font-size:12px">@item.intOrdenLaboratorioEnc</td>
+                <td style="font-size:12px">@item.strDoctor</td>
+                <td style="font-size:12px">@item.strTipoProtesis</td>
+                <td align="center" style="font-size:12px; align-items:center">
+                    <span title="Editar" class='urlEditar' data='@item.intOrdenLaboratorioEnc'><i class='fas fa-check' style='color: #5d9cec;'></i></span>
+                </td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

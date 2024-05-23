@@ -1,0 +1,36 @@
+﻿@model appWebPrueba.Models.OrdenLaboratorioVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="display:none;">Orden ENC</th>
+                <th style="display:none;">Orden Det</th>
+                <th>Pieza</th>
+                <th>Material</th>
+                <th>Trabajo</th>
+                <th>Cantidad</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridOrdenLaboratorio != null)
+            {
+                foreach (var item in Model.lGridOrdenLaboratorio)
+                {
+                    <tr>
+                        <td style="display:none;">@item.intOrdenLaboratorioEnc</td>
+                        <td style="display:none;">@item.intOrdenLaboratorioDet</td>
+                        <td style="font-size:12px">@item.intPieza</td>
+                        <td style="font-size:12px">@item.strMaterial</td>
+                        <td style="font-size:12px">@item.strTipoTrabajo</td>
+                        <td style="font-size:12px">@item.intCantidad</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

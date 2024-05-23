@@ -24,10 +24,10 @@ namespace appWebPrueba.DataAccess.daRol
                 List<Parametros> lParams = new List<Parametros>();
                 lParams.Add(new Parametros { Nombre = "intRol", Tipo = SqlDbType.Int, Valor = RolID });
 
-                //Establecemos el ambiente al que nos conectaremos en toda esta aplicación solo usaremos "cnnAppWebPrueba"
-                Conexion cn = new Conexion("cnnAppWebPrueba");
+                //Establecemos el ambiente al que nos conectaremos en toda esta aplicación solo usaremos "cnnLabAllCeramicOLD"
+                Conexion cn = new Conexion("cnnLabAllCeramicOLD");
                 //este es el SP que vamos a ejecutar
-                DataTable Results = cn.ExecSP("qry_Rol_Sel", lParams);
+                DataTable Results = cn.ExecSP("qry_V2_Rol_Sel", lParams);
 
                 gridRol = (
                     from DataRow dr in Results.Rows
@@ -60,15 +60,15 @@ namespace appWebPrueba.DataAccess.daRol
         {
             Resultado res = new Resultado();
             List<Parametros> lParams = new List<Parametros>();
-            //Establecemos el ambiente al que nos conectaremos en toda esta aplicación solo usaremos "cnnAppWebPrueba"
-            Conexion cn = new Conexion("cnnAppWebPrueba");
+            //Establecemos el ambiente al que nos conectaremos en toda esta aplicación solo usaremos "cnnLabAllCeramicOLD"
+            Conexion cn = new Conexion("cnnLabAllCeramicOLD");
             try
             {
                 //Agregamos los parámetros a la lista
                 lParams.Add(new Parametros { Nombre = "intRol", Tipo = SqlDbType.Int, Valor = intRol });
                 lParams.Add(new Parametros { Nombre = "strUsuario", Tipo = SqlDbType.NVarChar, Valor = user });
                 //este es el SP que vamos a ejecutar
-                DataTable Results = cn.ExecSP("qry_Rol_Del", lParams);
+                DataTable Results = cn.ExecSP("qry_V2_Rol_Del", lParams);
                 //Tomamos la respuesta y asignamos el ID
                 res.Id = (from DataRow dr in Results.Rows select dr["Id"].ToString()).FirstOrDefault();
                 if (res.Id != null)
@@ -94,7 +94,7 @@ namespace appWebPrueba.DataAccess.daRol
             Resultado res = new Resultado();
             List<Parametros> lParams = new List<Parametros>();
             //Establecemos el ambiente
-            Conexion cn = new Conexion("cnnAppWebPrueba");
+            Conexion cn = new Conexion("cnnLabAllCeramicOLD");
             try
             {
                 //asignamos los parámetros que recibimos, esto se hace mediante el uso de la clase "Parametros"
@@ -103,7 +103,7 @@ namespace appWebPrueba.DataAccess.daRol
                 lParams.Add(new Parametros { Nombre = "IsActivo", Tipo = SqlDbType.Bit, Valor = Activo });
                 lParams.Add(new Parametros { Nombre = "strUsuario", Tipo = SqlDbType.NVarChar, Valor = strUsuario });
                 //Se los pasamos al siguiente SP
-                DataTable Results = cn.ExecSP("qry_Rol_APP", lParams);
+                DataTable Results = cn.ExecSP("qry_V2_Rol_APP", lParams);
                 //Si todo sale bien, asignamos el Id y el mensaje que nos devuelve la BD
                 res.Id = (from DataRow dr in Results.Rows select dr["Id"].ToString()).FirstOrDefault();
                 res.Mensaje = (from DataRow dr in Results.Rows select dr["Mensaje"].ToString()).FirstOrDefault();
@@ -129,13 +129,13 @@ namespace appWebPrueba.DataAccess.daRol
             //La clase de resultado se usa en todos lados, hay que comentarlo siempre pero daremos por sentado que ya quedó claro
             Resultado res = new Resultado();
             List<Parametros> lParams = new List<Parametros>();
-            Conexion cn = new Conexion("cnnAppWebPrueba");
+            Conexion cn = new Conexion("cnnLabAllCeramicOLD");
             RolVM rol = new RolVM();
             try
             {
                 lParams.Add(new Parametros { Nombre = "intRol", Tipo = SqlDbType.Int, Valor = intRol });
 
-                DataTable Results = cn.ExecSP("qry_getRol_Sel", lParams);
+                DataTable Results = cn.ExecSP("qry_V2_getRol_Sel", lParams);
                 rol = (
                      from DataRow dr in Results.Rows
                      select new RolVM
@@ -162,7 +162,7 @@ namespace appWebPrueba.DataAccess.daRol
         {
             Resultado res = new Resultado();
             List<Parametros> lParams = new List<Parametros>();
-            Conexion cn = new Conexion("cnnAppWebPrueba");
+            Conexion cn = new Conexion("cnnLabAllCeramicOLD");
             try
             {
                 //Asignamos los parámetros
@@ -172,7 +172,7 @@ namespace appWebPrueba.DataAccess.daRol
                 lParams.Add(new Parametros { Nombre = "IsActivo", Tipo = SqlDbType.Bit, Valor = Activo });
                 lParams.Add(new Parametros { Nombre = "strUsuario", Tipo = SqlDbType.NVarChar, Valor = strUsuario });
                 //Este es el SP que Actualiza
-                DataTable Results = cn.ExecSP("qry_Rol_Upd", lParams);
+                DataTable Results = cn.ExecSP("qry_V2_Rol_Upd", lParams);
                 //Usamos la respuesta para asignar el Id y el Mensaje
                 res.Id = (from DataRow dr in Results.Rows select dr["Id"].ToString()).FirstOrDefault();
                 res.Mensaje = (from DataRow dr in Results.Rows select dr["Mensaje"].ToString()).FirstOrDefault();

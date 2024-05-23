@@ -1,0 +1,42 @@
+﻿@model appWebPrueba.Models.OperacionVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Operacion</th>
+                <th>Nombre</th>
+                <th>Nombre Corto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridOperacion != null)
+            {
+                foreach (var item in Model.lGridOperacion)
+                {
+                    <tr>
+                        <td style="font-size:12px">@item.intOperacion</td>
+                        <td style="font-size:12px">@item.strNombre</td>
+                        <td style="font-size:12px">@item.strNombreCorto</td>
+
+                        <td style="font-size:12px">
+                            @{
+                                string Elementoi = (@item.Estado == true ? "<span title='Activo'><i class='fas fa-check' style='color: green;'></i></span>" : "<span title='Inactivo'><i class='fas fa-times' style='color: red;'></i></span>");
+                            }
+                            @Html.Raw(@Elementoi)
+                        </td>
+                        <td style="font-size:12px">
+                            <span title="Editar" class='urlEditar' data='@item.intOperacion'><i class='fas fa-edit' style='color: #5d9cec;'></i></span>
+                            <span title="Eliminar" class='urlEliminar' data='@item.intOperacion'><i class='fas fa-trash' style='color: red;'></i></span>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

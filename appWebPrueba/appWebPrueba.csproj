@@ -45,10 +45,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=12.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
@@ -61,9 +74,8 @@
     <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -74,7 +86,13 @@
     <Reference Include="System.Net.Http.Formatting">
       <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -157,27 +175,71 @@
     <Compile Include="Clases\Resultado.cs" />
     <Compile Include="Clases\ResultViewModel.cs" />
     <Compile Include="Clases\User.cs" />
+    <Compile Include="Clases\VetecReport.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\EmpleadoController.cs" />
+    <Compile Include="Controllers\AdministrarMenuController.cs" />
+    <Compile Include="Controllers\ArticuloController.cs" />
+    <Compile Include="Controllers\ColorController.cs" />
+    <Compile Include="Controllers\ColorimetroController.cs" />
+    <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\MovimientoController.cs" />
+    <Compile Include="Controllers\OperacionController.cs" />
+    <Compile Include="Controllers\OrdenLaboratorioController.cs" />
+    <Compile Include="Controllers\ProductionController.cs" />
+    <Compile Include="Controllers\ProveedorController.cs" />
     <Compile Include="Controllers\ReportePagosController.cs" />
+    <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\RolController.cs" />
+    <Compile Include="Controllers\TipoGastoController.cs" />
+    <Compile Include="Controllers\TipoTrabajoController.cs" />
+    <Compile Include="Controllers\UnidadMedidaController.cs" />
+    <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="DataAccess\Conexion.cs" />
-    <Compile Include="DataAccess\daEmpleado\daEmpleado.cs" />
+    <Compile Include="DataAccess\daAdministrarMenu\daAdministrarMenu.cs" />
+    <Compile Include="DataAccess\daArticulo\daArticulo.cs" />
+    <Compile Include="DataAccess\daColorimetro\daColorimetro.cs" />
+    <Compile Include="DataAccess\daColor\daColor.cs" />
+    <Compile Include="DataAccess\daDoctor\daDoctor.cs" />
+    <Compile Include="DataAccess\daMaterial\daMaterial.cs" />
     <Compile Include="DataAccess\daMenu.cs" />
     <Compile Include="DataAccess\daMovimiento\daMovimiento.cs" />
+    <Compile Include="DataAccess\daOperacion\daOperacion.cs" />
+    <Compile Include="DataAccess\daOrdenLaboratorio\daOrdenLaboratorio.cs" />
+    <Compile Include="DataAccess\daProduction\daProduction.cs" />
+    <Compile Include="DataAccess\daProveedor\daProveedor.cs" />
     <Compile Include="DataAccess\daReportePagos\daReportePagos.cs" />
+    <Compile Include="DataAccess\daReportes\daReportes.cs" />
     <Compile Include="DataAccess\daRol\daRol.cs" />
+    <Compile Include="DataAccess\daTipoGasto\daTipoGasto.cs" />
+    <Compile Include="DataAccess\daTipoTrabajo\daTipoTrabajo.cs" />
+    <Compile Include="DataAccess\daUnidadMedida\daUnidadMedida.cs" />
+    <Compile Include="DataAccess\daUsuario\daUsuario.cs" />
     <Compile Include="DataAccess\Seguridad.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Code.cs" />
     <Compile Include="Models\AccountVM.cs" />
-    <Compile Include="Models\EmpleadoVM.cs" />
+    <Compile Include="Models\AdministrarMenuVM.cs" />
+    <Compile Include="Models\ArticuloVM.cs" />
+    <Compile Include="Models\ColorimetroVM.cs" />
+    <Compile Include="Models\ColorVM.cs" />
+    <Compile Include="Models\DoctorVM.cs" />
+    <Compile Include="Models\MaterialVM.cs" />
     <Compile Include="Models\MovimientoVM.cs" />
+    <Compile Include="Models\OperacionVM.cs" />
+    <Compile Include="Models\OrdenLaboratorioVM.cs" />
+    <Compile Include="Models\ProductionVM.cs" />
+    <Compile Include="Models\ProveedorVM.cs" />
     <Compile Include="Models\ReportePagosVM.cs" />
+    <Compile Include="Models\ReportesVM.cs" />
     <Compile Include="Models\RolVM.cs" />
+    <Compile Include="Models\TipoGastoVM.cs" />
+    <Compile Include="Models\TipoTrabajoVM.cs" />
+    <Compile Include="Models\UnidadMedidaVM.cs" />
+    <Compile Include="Models\UsuarioVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -219,9 +281,21 @@
     <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\css\fa-regular.css" />
     <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\css\fa-solid.css" />
     <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\css\fontawesome.css" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.eot" />
     <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.svg" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.ttf" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff2" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.eot" />
     <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.svg" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.ttf" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff2" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.eot" />
     <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.svg" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.ttf" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff" />
+    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff2" />
     <Content Include="vendor\%40ttskch\select2-bootstrap4-theme\dist\select2-bootstrap4.css" />
     <Content Include="vendor\animate.css\animate.css" />
     <Content Include="vendor\animo\animo.js" />
@@ -295,9 +369,21 @@
     <Content Include="vendor\fortawesome\fontawesome-free-webfonts\css\fa-regular.css" />
     <Content Include="vendor\fortawesome\fontawesome-free-webfonts\css\fa-solid.css" />
     <Content Include="vendor\fortawesome\fontawesome-free-webfonts\css\fontawesome.css" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.eot" />
     <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.svg" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.ttf" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff2" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.eot" />
     <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.svg" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.ttf" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff2" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.eot" />
     <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.svg" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.ttf" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff" />
+    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff2" />
     <Content Include="vendor\fullcalendar\dist\fullcalendar.css" />
     <Content Include="vendor\fullcalendar\dist\fullcalendar.js" />
     <Content Include="vendor\fullcalendar\dist\gcal.js" />
@@ -363,7 +449,11 @@
     <Content Include="vendor\select2\dist\css\select2.css" />
     <Content Include="vendor\select2\dist\js\select2.full.js" />
     <Content Include="vendor\simple-line-icons\css\simple-line-icons.css" />
+    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.eot" />
     <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.svg" />
+    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.ttf" />
+    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.woff" />
+    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.woff2" />
     <Content Include="vendor\Sortable\Sortable.js" />
     <Content Include="vendor\Sortable\Sortable.min.js" />
     <Content Include="vendor\spinkit\css\spinkit.css" />
@@ -379,7 +469,11 @@
     <Content Include="vendor\tingle\tingle.js" />
     <Content Include="vendor\weather-icons\css\weather-icons-wind.css" />
     <Content Include="vendor\weather-icons\css\weather-icons.css" />
+    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.eot" />
     <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.svg" />
+    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.ttf" />
+    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.woff" />
+    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.woff2" />
     <Content Include="vendor\whirl\dist\whirl.css" />
     <Content Include="vendor\x-editable\dist\bootstrap3-editable\css\bootstrap-editable.css" />
     <Content Include="vendor\x-editable\dist\bootstrap3-editable\img\clear.png" />
@@ -400,42 +494,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
-    <Content Include="Views\Empleado\Empleado.cshtml" />
-    <Content Include="Views\Empleado\Create.cshtml" />
-    <Content Include="Views\Empleado\Edit.cshtml" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.eot" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.ttf" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff2" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.eot" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.ttf" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff2" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.eot" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.ttf" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff" />
-    <Content Include="vendor\%40fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff2" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.eot" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.ttf" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-brands-400.woff2" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.eot" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.ttf" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-regular-400.woff2" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.eot" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.ttf" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff" />
-    <Content Include="vendor\fortawesome\fontawesome-free-webfonts\webfonts\fa-solid-900.woff2" />
-    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.eot" />
-    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.ttf" />
-    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.woff" />
-    <Content Include="vendor\simple-line-icons\fonts\Simple-Line-Icons.woff2" />
-    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.eot" />
-    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.ttf" />
-    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.woff" />
-    <Content Include="vendor\weather-icons\font\weathericons-regular-webfont.woff2" />
-    <Content Include="Views\Empleado\_ListaEmpleados.cshtml" />
     <Content Include="Views\Rol\Edit.cshtml" />
     <Content Include="Views\Rol\Rol.cshtml" />
     <Content Include="Views\Shared\Create.cshtml" />
@@ -445,9 +503,80 @@
     <Content Include="Views\Movimiento\Create.cshtml" />
     <Content Include="Views\ReportePagos\ReportePagos.cshtml" />
     <Content Include="Views\ReportePagos\_ListaPagos.cshtml" />
+    <Content Include="Views\Usuario\Usuario.cshtml" />
+    <Content Include="Views\Usuario\Edit.cshtml" />
+    <Content Include="Views\Usuario\Create.cshtml" />
+    <Content Include="Views\Usuario\_ListaUsuarios.cshtml" />
+    <Content Include="Views\AdministrarMenu\AdministrarMenu.cshtml" />
+    <Content Include="Views\AdministrarMenu\_ListarMenu1.cshtml" />
+    <Content Include="Views\Colorimetro\Colorimetro.cshtml" />
+    <Content Include="Views\TipoGasto\TipoGasto.cshtml" />
+    <Content Include="Views\TipoGasto\_ListaTipoGasto.cshtml" />
+    <Content Include="Views\Colorimetro\_ListaColorimetro.cshtml" />
+    <Content Include="Views\Colorimetro\Create.cshtml" />
+    <Content Include="Views\TipoGasto\Create.cshtml" />
+    <Content Include="Views\Colorimetro\Edit.cshtml" />
+    <Content Include="Views\TipoGasto\Edit.cshtml" />
+    <Content Include="Views\Usuario\CambiarPassWord.cshtml" />
+    <Content Include="Views\Material\Material.cshtml" />
+    <Content Include="Views\TipoTrabajo\TipoTrabajo.cshtml" />
+    <Content Include="Views\Material\_ListaMaterial.cshtml" />
+    <Content Include="Views\TipoTrabajo\_ListaTipoTrabajo.cshtml" />
+    <Content Include="Views\Material\Create.cshtml" />
+    <Content Include="Views\TipoTrabajo\Create.cshtml" />
+    <Content Include="Views\TipoTrabajo\Edit.cshtml" />
+    <Content Include="Views\Material\Edit.cshtml" />
+    <Content Include="Views\Doctor\_ListaDoctor.cshtml" />
+    <Content Include="Views\Doctor\Doctor.cshtml" />
+    <Content Include="Views\Doctor\Create.cshtml" />
+    <Content Include="Views\Doctor\Edit.cshtml" />
+    <Content Include="Views\Color\Color.cshtml" />
+    <Content Include="Views\Color\_ListaColor.cshtml" />
+    <Content Include="Views\Color\Create.cshtml" />
+    <Content Include="Views\Color\Edit.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\Create.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\Edit.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\OrdenLaboratorio.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\adminOrdenLab.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\_listarOrdenesLab.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\_AyudaOrdenesLab.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\_DetalleOrdenLab.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\_NuevoDetalleOrdenLab.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\_DetalleOrdenLab_SoloVista.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\Edit_SoloVista.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\_EncabezadoGeneral.cshtml" />
+    <Content Include="Views\OrdenLaboratorio\_DetalleGeneral_OrdenLab.cshtml" />
+    <Content Include="Views\Reportes\AdeudosXDoctor.cshtml" />
+    <Content Include="Views\Reportes\_listaAdeudosDR.cshtml" />
+    <Content Include="Views\Articulo\Articulo.cshtml" />
+    <Content Include="Views\Articulo\_ListaArticulo.cshtml" />
+    <Content Include="Views\Proveedor\Proveedor.cshtml" />
+    <Content Include="Views\Proveedor\_ListaProveedor.cshtml" />
+    <Content Include="Views\UnidadMedida\UnidadMedida.cshtml" />
+    <Content Include="Views\UnidadMedida\_ListaUnidadMedida.cshtml" />
+    <Content Include="Views\Articulo\Edit.cshtml" />
+    <Content Include="Views\Proveedor\Edit.cshtml" />
+    <Content Include="Views\UnidadMedida\Edit.cshtml" />
+    <Content Include="Views\Articulo\Create.cshtml" />
+    <Content Include="Views\Proveedor\Create.cshtml" />
+    <Content Include="Views\UnidadMedida\Create.cshtml" />
+    <Content Include="Views\Operacion\_ListaOperacion.cshtml" />
+    <Content Include="Views\Operacion\Operacion.cshtml" />
+    <Content Include="Views\Operacion\Create.cshtml" />
+    <Content Include="Views\Operacion\Edit.cshtml" />
+    <Content Include="Views\Operacion\_ListaOpsActivas.cshtml" />
+    <Content Include="Views\Operacion\_ListaOpsXTipoTrabajo.cshtml" />
+    <Content Include="Views\Operacion\_ListaArtsActivos.cshtml" />
+    <Content Include="Views\Operacion\_ListaMaterialXOperacionTipoTrabajo.cshtml" />
+    <Content Include="Views\Production\YesoOperacion.cshtml" />
+    <Content Include="Views\Shared\Production\_ListaPendientes_Yesos.cshtml" />
+    <Content Include="Views\Shared\Production\_TotalesXUsuario.cshtml" />
+    <Content Include="Views\Production\FabricacionXOperacion.cshtml" />
+    <Content Include="Views\Reportes\_GraficoReportesXHora.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\AdministrarUsuario\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

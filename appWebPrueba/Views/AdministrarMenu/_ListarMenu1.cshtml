@@ -1,0 +1,71 @@
+﻿@model appWebPrueba.Models.AdministrarMenuVM
+
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="display:none">intMenuReal</th>
+                <th style="display:none">Desglose</th>
+                <th>Nivel 1</th>
+                <th>Nivel 2</th>
+                <th>Nivel 3</th>
+                <th style="display:none">Nivel 4</th>
+                <th>Permitido</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.lGridAdministrarMenu != null)
+            {
+                foreach (var item in Model.lGridAdministrarMenu)
+                {
+                    <tr>
+                        <td style="display:none">@item.intMenuReal</td>
+                        <td style="display:none">@item.strDesgloseMenu</td>
+                        <td style="font-size:12px">@item.strDescripcion1</td>
+                        <td style="font-size:12px">@item.strDescripcion2</td>
+                        <td style="font-size:12px">@item.strDescripcion3</td>
+                        <td style="display:none">@item.strDescripcion4</td>
+                        <td style="font-size:12px">
+                            @{
+                                string Elementoi = (@item.Estado == true ? "<span title='Activo'><i class='fas fa-check' style='color: green;'></i></span>" : "<span title='Inactivo'><i class='fas fa-times' style='color: red;'></i></i></span>");
+                            }
+                            @Html.Raw(@Elementoi)
+                        </td>
+                        <td style="font-size:24px">
+                            @*<span title="Agregar" class='urlAgregar' data='@item.strDesgloseMenu'><i class='fas fa-plus-square ' style='color:#505050;'></i></span>&nbsp;&nbsp;
+                                                    <span title="Editar" class='urlEditar' data='@item.intMenuReal'><i class='fas fa-edit' style='color: #5d9cec;'></i></span>&nbsp;&nbsp;
+                                <span title="Eliminar" class='urlEliminar' data='@item.intMenuReal'><i class='fas fa-trash' style='color: red;'></i></span>*@
+
+                            @if (item.intPerfil == 0)
+                            {
+                                <span title="N/A"></span>
+                            }
+                            else
+                            {
+                                if ((item.intPerfil == 1) || (item.intPerfil == 2))
+                                {
+                                    <span title="OK"></span>
+                                }
+                                else
+                                {
+                                    if ((item.intPerfil != 0) && (@item.Estado == false))
+                                    {
+                                        <span title="Agregar" class='urlAgregar_ListMenu' data='@item.strDesgloseMenu'><i class='fas fa-plus-square ' style='color:#505050;'></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span title="Eliminar" class='urlEliminar_ListMenu' data='@item.intMenuReal'><i class='fas fa-minus-square' style='color:#e63232;'></i></span>
+                                    }
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

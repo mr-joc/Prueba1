@@ -15,7 +15,7 @@ namespace appWebPrueba.DataAccess
         //Primero declaramos la variable "gEnviroment"
         private string gEnviroment;
 
-        //Para conectarnos, al mandar el ambiente este se llamará "cnnAppWebPrueba" (puedes usar diferentes ambientes para conectarte a diferentes BD desde el mismo programa)
+        //Para conectarnos, al mandar el ambiente este se llamará "cnnLabAllCeramic" (puedes usar diferentes ambientes para conectarte a diferentes BD desde el mismo programa)
         public Conexion(string Ambiente)
         {
             //Igualamos la variable previamente declarada al ambiente

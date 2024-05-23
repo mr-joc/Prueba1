@@ -1,0 +1,97 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.OrdenLaboratorioVM
+
+@if (Model.intTipoDatoMuestra == 1)
+{
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-lg-6 text-white bg-dark mb-3">
+                &nbsp;Protesis:&nbsp;&nbsp;<Label>@Model.strTipoProtesis</Label><br />
+                &nbsp;Proceso:&nbsp;&nbsp;<Label>@Model.strProceso</Label><br />
+                &nbsp;Imagenes:&nbsp;&nbsp;<Label>@Model.strImagenes</Label>
+            </div>
+            <div class="col-lg-6 text-white bg-dark mb-3">
+                &nbsp;Entrega:&nbsp;&nbsp;<Label>@Model.strFechaEntrega</Label><br />
+                &nbsp;Doctor:&nbsp;&nbsp;<Label>@Model.strDoctor</Label>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (Model.intTipoDatoMuestra == 2)
+{
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-lg-6 text-white bg-dark mb-3">
+                &nbsp;Costo:&nbsp;&nbsp;<Label><b>@Model.dblCosto.ToString("C")</b></Label><br />
+                &nbsp;Pagado:&nbsp;&nbsp;<Label><b>@Model.dblPagado.ToString("C")</b></Label><br />
+                &nbsp;Saldo:&nbsp;&nbsp;<Label><b>@Model.dblSaldo.ToString("C")</b></Label>
+            </div>
+            <div class="col-lg-6 text-white bg-dark mb-3">
+                &nbsp;Protesis:&nbsp;&nbsp;<Label>@Model.strTipoProtesis</Label><br />
+                &nbsp;Entrega:&nbsp;&nbsp;<Label>@Model.strFechaEntrega</Label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-lg-2">
+            Pago Parcial
+        </div>
+        <div class="col-lg-2">
+            <div class="input-group">
+                <input id="txtMontoAbona" class="form-control " type="number" value="0" max="@Model.dblSaldo" min="0" />
+            </div>
+        </div>
+        <div title="Abono" id="dviAbonar" style="cursor:pointer" class="col-lg-4">
+            <img alt="Abono" src="../../Imagenes/Abonar.png" /> Abonar
+        </div>
+        <div class="col-lg-2">
+            <div title="Imprimir" class="btn btn-dark float-xl-center" id="btnImpresion">
+                &nbsp;Imprimir&nbsp;&nbsp;<em class="fa-sm mr-2 fas fa-print"></em>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div title="E-Mail" class="btn btn-dark float-xl-center" id="btnEMail">
+                &nbsp;E-Mail&nbsp;&nbsp;<em class="fa-sm mr-2 fas fa-envelope"></em>
+            </div>
+        </div>
+    </div>
+
+    @*<table border="0" cellspacing="0" cellpadding="0">
+        <tr align="left">
+            <td class="tdSubHead" align="left">
+                &nbsp;&nbsp; Pago Parcial :&nbsp;
+                <input ID="txtAbono" Rows="1" />
+            </td>
+            <td class="tdSubHead" cursor="hand" onclick="myFunction()"><img alt="Abono" src="../../Imagenes/Abonar.png" /> Abonar</td>
+            <td align="right">&nbsp;&nbsp;&nbsp; <input id="Imprimir" type="button" onserverclick="btnImprimir_ServerClick" runat="server" value="Imprimir" size="" style="background-color: #00A2E8;" />&nbsp;&nbsp;<input id="EMail" type="button" onserverclick="btnMail_ServerClick" runat="server" value="E-Mail" size="" style="background-color: #00a2e8" /></td>
+        </tr>
+        <tr class="invisible">
+            <td colspan="2"></td>
+            <td></td>
+            <td colspan="2">
+                <input id="btnAceptar" type="button" onserverclick="btnAceptar_ServerClick" runat="server" value="Abonar" style="height: 124px;" size="" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td style="table-layout: fixed; cursor: hand;" onclick="myFunction()" align="center">
+                <img alt="Abono" src="../../Imagenes/Abonar2.png" class="invisible" /><br />
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td style="cursor: hand;" onclick="myFunction()" align="center" class="invisible">Abonar</td>
+            <td colspan="2"></td>
+        </tr>
+    </table>*@
+
+}
+<script type="text/javascript">
+
+
+</script>

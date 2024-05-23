@@ -1,0 +1,431 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.DoctorVM
+@{
+    ViewBag.Title = "Doctor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-heading bg-dark text-white">
+    <div>
+        Doctores
+    </div>
+</div>
+<!-- START card-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row" id="CreateView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Capture</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="CreateForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="EditView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Editar</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="EditForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Listado</h5>
+                    </div>
+                    <div class="card-wrapper collapse show">
+                        <div class="card-body">
+                            <div id="EmpleadosForm-wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/vendor/sweetalert2/sweetalert2.min.css" />
+
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- Datatables-->
+    <link rel="stylesheet" href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="../css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="~/vendor/holdon/HoldOn.min.css" />
+}
+
+@section Scripts {
+    <script src="~/vendor/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/vendor/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- Datatables-->
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/dataTables.buttons.js"></script>
+    <script src="~/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.colVis.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.flash.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.html5.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.print.js"></script>
+    <script src="~/vendor/datatables.net-keytable/js/dataTables.keyTable.js"></script>
+    <script src="~/vendor/datatables.net-responsive/js/dataTables.responsive.js"></script>
+    <script src="~/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="~/vendor/jszip/dist/jszip.js"></script>
+    <script src="~/vendor/pdfmake/build/pdfmake.js"></script>
+    <script src="~/vendor/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer.js@4.0.2/dist/easytimer.min.js"></script>
+    <script src="~/vendor/holdon/HoldOn.min.js"></script>
+
+    <script type="text/javascript">
+        $("#radioActivoC").attr('checked', true);
+
+        function radioActivoE() { if (document.getElementById('radioActivoE').value == 0) { $("#radioActivoE").prop('checked', true); $("#radioActivoE").prop('value', 1); } else { $("#radioActivoE").prop('checked', false); $("#radioActivoE").prop('value', 0); } }
+        function radioActivo() { if (document.getElementById('radioActivoC').value == 0) { $("#radioActivoC").prop('checked', true); $("#radioActivoC").prop('value', 1); } else { $("#radioActivoC").prop('checked', false); $("#radioActivoC").prop('value', 0); } }
+
+
+
+    function buscar() {
+    }
+
+    function create() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Create", "Doctor")",
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#CreateForm-wrapper').html(data);
+                $('#CreateForm-wrapper').fadeIn();
+                HoldOn.close();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+         $('#EditView-wrapper').fadeOut();
+        ListarDoctor();
+        create();
+    });
+
+
+        function ListarDoctor() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getGridDoctor", "Doctor")",
+                data: $('form').serialize(),
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                   LimpiaDiv('EmpleadosForm-wrapper');
+                    $('#EmpleadosForm-wrapper').html(data);
+                    $('#EmpleadosForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }
+
+        $(document).on("click", ".urlEditar", function (e) {
+        e.preventDefault();
+        $('#CreateView-wrapper').fadeOut();
+            var ID = $(this).attr("data");
+            console.log(ID);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditarDoctor", "Doctor")",
+            data: { DoctorID: ID },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#EditForm-wrapper').html(data);
+                $('#EditForm-wrapper').fadeIn();
+                $('#EditView-wrapper').fadeIn();
+                HoldOn.close();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+    });
+
+        $(document).on("click", ".urlEliminar", function (e) {
+        e.preventDefault();
+        var ID = $(this).attr("data");
+        Swal.fire({
+            title: '¿Desesa eliminar este Registro? Este movimiento no se puede deshacer.',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("EliminarDoctor", "Doctor")",
+                    datatype: "json",
+                    traditional: true,
+                    data: { DoctorID: ID },
+                    beforeSend: function () {
+                        HoldOn.open({
+                            theme: "sk-cube-grid"
+                        });
+                    },
+                    complete: function () {
+                        HoldOn.close();
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data)
+                        if (data.OK) {
+                            HoldOn.close();
+                            ListarDoctor();
+                            Swal.fire({ title: "Listo", text: "Registro eliminado", type: 'info', });
+                        } else {
+                            Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                        }
+                    },
+                    error: function (data) {
+                        console.log("Error", "Error al eliminar este registro.", "error");
+                        HoldOn.close();
+                    }
+                });
+            }
+        });
+    });
+
+        $(document).on("click", "#GuardaEditDoctor-btn", function (e) {
+            e.preventDefault();
+            var EditarDoctor = $('#EditForm-wrapper :input').serializeArray();
+            var ID;
+            var nombre;
+            var apPaterno;
+            var apMaterno;
+            var direccion;
+            var eMail;
+            var colonia;
+            var rfc;
+            var nombreFiscal;
+            var cp;
+            var telefono;
+            var celular;
+            var direccionFiscal;
+            var activo = document.getElementById('radioActivoE').value;
+
+            EditarDoctor.map(function (doctor) {
+                if (doctor.name === "intDoctorID") {
+                    ID = doctor.value;
+                }
+                if (doctor.name === "strNombre") {
+                    nombre = doctor.value;
+                }
+                if (doctor.name === "strApPaterno") {
+                    apPaterno = doctor.value;
+                }
+                if (doctor.name === "strApMaterno") {
+                    apMaterno = doctor.value;
+                }
+                if (doctor.name === "strDireccion") {
+                    direccion = doctor.value;
+                }
+                if (doctor.name === "strEMail") {
+                    eMail = doctor.value;
+                }
+                if (doctor.name === "strColonia") {
+                    colonia = doctor.value;
+                }
+                if (doctor.name === "strRFC") {
+                    rfc = doctor.value;
+                }
+                if (doctor.name === "strNombreFiscal") {
+                    nombreFiscal = doctor.value;
+                }
+                if (doctor.name === "intCP") {
+                    cp = doctor.value;
+                }
+                if (doctor.name === "strTelefono") {
+                    telefono = doctor.value;
+                }
+                if (doctor.name === "strCelular") {
+                    celular = doctor.value;
+                }
+                if (doctor.name === "strDireccionFiscal") {
+                    direccionFiscal = doctor.value;
+                }
+            });
+
+            if (ID != '' && nombre != '' && strApPaterno != '' && ID != undefined && nombre != undefined && strApPaterno != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GuardaEditDoctor", "Doctor")",
+                data: {
+                    DoctorID: ID,
+                    strNombre: nombre,
+                    strApPaterno: apPaterno,
+                    strApMaterno: apMaterno,
+                    strDireccion: direccion,
+                    strEMail: eMail,
+                    strColonia: colonia,
+                    strRFC: rfc,
+                    strNombreFiscal: nombreFiscal,
+                    intCP: cp,
+                    strTelefono: telefono,
+                    strCelular: celular,
+                    strDireccionFiscal: direccionFiscal,
+                    Activo: activo,
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos actualizados", text: data.Mensaje, type: 'success', });
+                        HoldOn.close();
+                        $('#EditView-wrapper').fadeOut();
+                        $('#EditForm-wrapper').fadeOut();
+                        ListarDoctor();
+                        $('#CreateView-wrapper').fadeIn();
+                    }
+                },
+                error: function (data) {
+                    console.log("Error", "Error al eliminar la Mesa.", "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Faltan datos, por favor verifica que ningun campo este vacío.',
+                type: 'error',
+            });
+        }
+    });
+
+        $(document).on("click", "#GuardarDoctor-btn", function (e) {
+        e.preventDefault();
+            var nombre = $(@Html.IdFor(x => x.strNombre)).val();
+            var apPaterno = $(@Html.IdFor(x => x.strApPaterno)).val();
+            var apMaterno = $(@Html.IdFor(x => x.strApMaterno)).val();
+            var direccion = $(@Html.IdFor(x => x.strDireccion)).val();
+            var eMail = $(@Html.IdFor(x => x.strEMail)).val();
+            var colonia = $(@Html.IdFor(x => x.strColonia)).val();
+            var rfc = $(@Html.IdFor(x => x.strRFC)).val();
+            var nombreFiscal = $(@Html.IdFor(x => x.strNombreFiscal)).val();
+            var cp = $(@Html.IdFor(x => x.intCP)).val();
+            var telefono = $(@Html.IdFor(x => x.strTelefono)).val();
+            var celular = $(@Html.IdFor(x => x.strCelular)).val();
+            var direccionFiscal = $(@Html.IdFor(x => x.strDireccionFiscal)).val();
+            var activo = document.getElementById('radioActivoC').value;
+
+            if (apPaterno != '' && nombre != '' && apPaterno != undefined && nombre != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GuardarDoctor", "Doctor")",
+                data: {
+                    strNombre: nombre,
+                    strApPaterno: apPaterno,
+                    strApMaterno: apMaterno,
+                    strDireccion: direccion,
+                    strEMail: eMail,
+                    strColonia: colonia,
+                    strRFC: rfc,
+                    strNombreFiscal: nombreFiscal,
+                    intCP: cp,
+                    strTelefono: telefono,
+                    strCelular: celular,
+                    strDireccionFiscal: direccionFiscal,
+                    Activo: activo,
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos guardados", text: data.Mensaje, type: 'success', });
+                        HoldOn.close();
+                        ListarDoctor();
+                        create();
+                    } else {
+                        Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                    }
+                },
+                error: function (data) {
+                    console.log("Ocurrió el siguiente Error:", data.Mensaje, "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+                Swal.fire({ title: 'Faltan datos, por favor verifica que ningun campo este vacío.', type: 'error', });
+        }
+    });
+
+
+        function LimpiaDiv(elementID) {
+            var div = document.getElementById(elementID);
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+
+            }
+        }
+
+    </script>
+}
+

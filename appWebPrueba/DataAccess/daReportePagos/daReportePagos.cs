@@ -22,7 +22,7 @@ namespace appWebPrueba.DataAccess.daReportePagos
                 lParams.Add(new Parametros { Nombre = "intMes", Tipo = SqlDbType.Int, Valor = intMes });
                 lParams.Add(new Parametros { Nombre = "intEmpleado", Tipo = SqlDbType.Int, Valor = intEmpleado });
                 //Usamos el único ambiente que manejamos
-                Conexion cn = new Conexion("cnnAppWebPrueba");
+                Conexion cn = new Conexion("cnnLabAllCeramic");
                 //Enviamos los parámetros al siguiente SO
                 DataTable Results = cn.ExecSP("qry_CalcularSueldoTotal_SEL", lParams);
                 //y cargamos el modelo con el resultado que arroja la BD
@@ -74,7 +74,7 @@ namespace appWebPrueba.DataAccess.daReportePagos
             {
                 List<Parametros> lParams = new List<Parametros>();
                 //Usamos el mismo ambiente 
-                Conexion cn = new Conexion("cnnAppWebPrueba");
+                Conexion cn = new Conexion("cnnLabAllCeramic");
                 //Mandamos llamar al siguiente SP
                 DataTable Results = cn.ExecSP("qry_ListarMeses_SEL", lParams);
                 //Los resultados los usamos para llenar la siguiente lista

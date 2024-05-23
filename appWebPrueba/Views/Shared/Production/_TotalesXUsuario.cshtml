@@ -1,0 +1,87 @@
+﻿@model appWebPrueba.Models.ProductionVM
+
+@{
+    Layout = null;
+}
+
+@if (Model.lGridResumenProduccion != null)
+{
+    var conteo = Model.lGridResumenProduccion.Count;
+
+    if (conteo != 0)
+    {
+        var _mesa = Model.lGridResumenProduccion[0].strDepartamentoActual;
+        var _acumuladoSemanal = Model.lGridResumenProduccion[0].intAcumuladoSemanal;
+        var _promedio = Model.lGridResumenProduccion[0].intPromedio;
+        var _acumuladoHoy = Model.lGridResumenProduccion[0].intAcumuladoHoy;
+        var _pendientes = Model.lGridResumenProduccion[0].intPendientes;
+
+        <div style="border-color:#ff0000; border:2px;" class="col-xl-3 col-md-6">
+            <!-- START card-->
+            <div class="card flex-row align-items-center align-items-stretch border-0">
+                <div class="col-4 d-flex align-items-center bg-primary-dark justify-content-center rounded-left">
+                    <em class="fa-2x mr-2 fas fa-cogs fa-3x"></em>
+                </div>
+                <div class="col-8 py-3 bg-primary rounded-right">
+                    <div class="h2 mt-0">
+                        <span id="sp_CapacidadCompleta">@_acumuladoSemanal</span>
+                        <small>Trabajos</small>
+                    </div>
+                    <div class="text-uppercase">Esta semana</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <!-- START card-->
+            <div class="card flex-row align-items-center align-items-stretch border-0">
+                <div class="col-4 d-flex align-items-center bg-primary-dark justify-content-center rounded-left">
+                    <em class="fa fa-chart-line fa-3x"></em>
+                </div>
+                <div class="col-8 py-3 bg-primary rounded-right">
+                    <div class="h2 mt-0">
+                        <span id="sp_Terminadas">@_promedio</span>
+                        <small>Trabajos</small>
+                    </div>
+                    <div class="text-uppercase">Promedio Semanal</div>
+                </div>
+            </div>
+        </div>
+        <div style="cursor:pointer" id="VerAvanceXHora-Span" class="col-xl-3 col-lg-6 col-md-12">
+            <!-- START card-->
+            <div class="card flex-row align-items-center align-items-stretch border-0">
+                <div class="col-4 d-flex align-items-center bg-success-dark justify-content-center rounded-left">
+                    &nbsp;<em class="fa-2x mr-2 fas fa-check fa-3x"></em>
+                </div>
+                <div class="col-8 py-3 bg-success rounded-right">
+                    <div class="h2 mt-0">
+                        <span id="sp_CargaCompleta">@_acumuladoHoy</span>
+                        <small>Trabajos hoy</small>
+                    </div>
+                    <div class="text-uppercase">@_mesa</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-md-12">
+            <!-- START card-->
+            <div class="card flex-row align-items-center align-items-stretch border-0">
+                <div class="col-4 d-flex align-items-center bg-warning-dark justify-content-center rounded-left">
+                    &nbsp;<em class="fa-2x mr-2 fas fa-clipboard-list fa-3x"></em>
+                </div>
+                <div class="col-8 py-3 bg-warning rounded-right">
+                    <div class="h2 mt-0">
+                        <span id="sp_CerradasCompletas___02">@_pendientes</span>
+                        <small>Trabajos</small>
+                    </div>
+                    <div class="text-uppercase">Pendientes</div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+@*<script type="text/javascript">
+
+    var tt_Total = document.getElementById("spTotal").innerHTML;
+    document.getElementById("sp_CerradasCompletas___02").innerHTML = tt_Total;
+</script>*@

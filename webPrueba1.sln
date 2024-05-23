@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appWebPrueba", "appWebPrueba\appWebPrueba.csproj", "{C7B4D157-4454-4FD3-8A6F-06E13B62873E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dataAccess", "dataAccess\dataAccess.csproj", "{E6F64178-B0C5-48AD-9716-939FAC3A7772}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IECHClinic", "IECHClinic\IECHClinic.csproj", "{C465E769-686E-4FCD-BACD-930A0F1BC73E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{C7B4D157-4454-4FD3-8A6F-06E13B62873E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7B4D157-4454-4FD3-8A6F-06E13B62873E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7B4D157-4454-4FD3-8A6F-06E13B62873E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F64178-B0C5-48AD-9716-939FAC3A7772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F64178-B0C5-48AD-9716-939FAC3A7772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F64178-B0C5-48AD-9716-939FAC3A7772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F64178-B0C5-48AD-9716-939FAC3A7772}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C465E769-686E-4FCD-BACD-930A0F1BC73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C465E769-686E-4FCD-BACD-930A0F1BC73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C465E769-686E-4FCD-BACD-930A0F1BC73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C465E769-686E-4FCD-BACD-930A0F1BC73E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

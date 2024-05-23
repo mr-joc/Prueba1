@@ -1,0 +1,1101 @@
+﻿@using appWebPrueba.DataAccess
+@model appWebPrueba.Models.OrdenLaboratorioVM
+@{
+    ViewBag.Title = "OrdenLaboratorio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-heading bg-dark text-white">
+    <div>
+        Orden de Laboratorio
+        <small>@DateTime.Now.Day/@DateTime.Now.Month/@DateTime.Now.Year</small>
+    </div>
+</div>
+<!-- START card-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row" id="CreateView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Capture</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="CreateForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="EditView-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Editar</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="EditForm-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="listado-wrapper">
+            <div class="col-lg-12">
+                <div class="card card-default">
+                    <div class="card-header text-white bg-dark mb-3">
+                        <h5>Detalle</h5>
+                    </div>
+                    <div class="card-wrapper collapse show">
+                        <div class="card-body">
+                            <div id="ListadoForm-wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<div class="row">
+    <div id="OrdenLab-Modal" class="modal" role="grid">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white bg-dark mb-3">
+                    <h4 class="modal-title">Ordenes</h4>
+                    <button type="button" class="close text-white " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-4">
+                        @Html.LabelFor(x => x.intDoctor, new { @class = "label-form" })
+                        <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                                class="form-control populate mb-3"
+                                name="@Html.NameFor(x => x.Doctores.DoctorID)"
+                                id="cboDoctor_Busca">
+
+                            @if (Model.Doctores.DoctorID != null)
+                            {
+                                <option value="@Model.Doctores.DoctorID">@Model.Doctores.Nombre</option>
+                            }
+                            else
+                            {
+                                <option value="0">Seleccione...</option>
+                            }
+                            @foreach (appWebPrueba.Models.Doctores dres in Model.lDoctores)
+                            {
+                                <option value="@dres.DoctorID">
+                                    @dres.Nombre
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.LabelFor(x => x.intTipoProtesis, new { @class = "label-form" })
+                        <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                                class="form-control populate mb-3"
+                                name="@Html.NameFor(x => x.Protesis.TipoProtesisID)"
+                                id="cboProtesis_Busca"
+                                onchange="CargaProcesos(this.value)">
+
+                            @if (Model.Protesis.TipoProtesisID != null)
+                            {
+                                <option value="@Model.Protesis.TipoProtesisID">@Model.Protesis.Nombre</option>
+                            }
+                            else
+                            {
+                                <option value="0">Seleccione...</option>
+                            }
+                            @foreach (appWebPrueba.Models.Protesis protesis in Model.lProtesis)
+                            {
+                                <option value="@protesis.TipoProtesisID">
+                                    @protesis.Nombre
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <div title="Buscar..." class="btn btn-success float-xl-right" id="Filtro-Span">
+                            &nbsp;Filtrar&nbsp;&nbsp;<em class="fa-sm mr-2 fas fa-search"></em>
+                        </div>
+                    </div>
+                </div>
+                <div id="ChartForm-wrapper" class="row">
+                    <div class="col-xl-12">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <!-- STACKED BAR CHART -->
+                                <div class="card card-default card-demo">
+                                    <div class="card-wrapper collapse show">
+                                        <div class="chart">
+                                            <div id="ayuda-wrapper">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark float-right" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<div class="row">
+    <div id="OrdenDet-Modal" class="modal" role="grid">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white bg-dark mb-3">
+                    <h4 class="modal-title">Agregar Detalle</h4>
+                    <button type="button" class="close text-white " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-4">
+                        @Html.LabelFor(x => x.intMaterial, new { @class = "label-form" })
+                        <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                                class="form-control populate mb-3"
+                                name="@Html.NameFor(x => x.MaterialesORD.MaterialID)"
+                                id="cboMaterial_Det"
+                                onchange="CargaTiposTrabajo(this.value)">
+
+                            @if (Model.MaterialesORD.MaterialID != null)
+                            {
+                                <option value="@Model.MaterialesORD.MaterialID">@Model.MaterialesORD.Nombre</option>
+                            }
+                            else
+                            {
+                                <option value="0">Seleccione...</option>
+                            }
+                            @foreach (appWebPrueba.Models.MaterialesORD mat in Model.lMaterialesORD)
+                            {
+                                <option value="@mat.MaterialID">
+                                    @mat.Nombre
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.LabelFor(x => x.intTipoTrabajo, new { @class = "label-form" })
+                        <select data-plugin-selectTwo data-minimum-results-for-search="Infinity"
+                                class="form-control populate mb-3"
+                                name="@Html.NameFor(x => x.TrabXMatORD.intTrabajo)"
+                                id="cboTipoTrabajo_Det">
+                            
+
+                            @if (Model.TrabXMatORD.intTrabajo != null)
+                            {
+                                <option value="@Model.TrabXMatORD.intTrabajo">@Model.TrabXMatORD.strNombre</option>
+                            }
+                            else
+                            {
+                                <option value="0">Seleccione...</option>
+                            }
+                            @foreach (appWebPrueba.Models.TrabXMatORD trab in Model.lTrabXMatORD)
+                            {
+                                <option value="@trab.intTrabajo">
+                                    @trab.strNombre
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div id="ColorPrincipal" style="display:none; background-color:rgb(28 212 54); color: rgb(255,255,255,1);">1</div>
+                <div style="display:none" class="form-group row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table" id="tblDatos" border="1" style="user-select: none;"></table>
+                        </div>
+                    </div>
+                </div>
+                <table style="display:none" id="tblDatos2" border="1"  >
+                    <tr>
+                        @*<td style="display:nones"><input type="text" name="txtEntra" id="txtEntra" value="0"></td>
+                        <td style="display:nones"><input type="text" name="txtSale" id="txtSale" value="0"></td>
+                        <td style="display:nones"><input type="text" name="txtPresionado" id="txtPresionado" value="0"></td>*@
+                        <td id="tdValor">
+                        </td>
+                    </tr>
+                </table>
+                 <div class="form-group row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td style="Display:none;" id="P20">2.0</td>
+                                        <td style="Display:none;" id="P19">1.9</td>
+                                        <td onclick="javascript: habilita_des(P18);" id="P18">1.8</td>
+                                        <td onclick="javascript: habilita_des(P17);" id="P17">1.7</td>
+                                        <td onclick="javascript: habilita_des(P16);" id="P16">1.6</td>
+                                        <td onclick="javascript: habilita_des(P15);" id="P15">1.5</td>
+                                        <td onclick="javascript: habilita_des(P14);" id="P14">1.4</td>
+                                        <td onclick="javascript: habilita_des(P13);" id="P13">1.3</td>
+                                        <td onclick="javascript: habilita_des(P12);" id="P12">1.2</td>
+                                        <td onclick="javascript: habilita_des(P11);" id="P11">1.1</td>
+                                        <td onclick="javascript: habilita_des(P21);" id="P21">2.1</td>
+                                        <td onclick="javascript: habilita_des(P22);" id="P22">2.2</td>
+                                        <td onclick="javascript: habilita_des(P23);" id="P23">2.3</td>
+                                        <td onclick="javascript: habilita_des(P24);" id="P24">2.4</td>
+                                        <td onclick="javascript: habilita_des(P25);" id="P25">2.5</td>
+                                        <td onclick="javascript: habilita_des(P26);" id="P26">2.6</td>
+                                        <td onclick="javascript: habilita_des(P27);" id="P27">2.7</td>
+                                        <td onclick="javascript: habilita_des(P28);" id="P28">2.8</td>
+                                        <td style="Display:none;" id="P29">2.9</td>
+                                        <td style="Display:none;" id="P30">3.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td><img ALT='1.8' width="25" height="55" border='0' src='/Imagenes/Piezas/18.png' /></td>
+                                        <td><img ALT='1.7' width="25" height="55" border='0' src='/Imagenes/Piezas/17.png' /></td>
+                                        <td><img ALT='1.6' width="25" height="55" border='0' src='/Imagenes/Piezas/16.png' /></td>
+                                        <td><img ALT='1.5' width="25" height="55" border='0' src='/Imagenes/Piezas/15.png' /></td>
+                                        <td><img ALT='1.4' width="25" height="55" border='0' src='/Imagenes/Piezas/14.png' /></td>
+                                        <td><img ALT='1.3' width="25" height="55" border='0' src='/Imagenes/Piezas/13.png' /></td>
+                                        <td><img ALT='1.2' width="25" height="55" border='0' src='/Imagenes/Piezas/12.png' /></td>
+                                        <td><img ALT='1.1' width="20" height="55" border='0' src='/Imagenes/Piezas/11.png' /></td>
+                                        <td><img ALT='2.1' width="20" height="55" border='0' src='/Imagenes/Piezas/21.png' /></td>
+                                        <td><img ALT='2.2' width="25" height="55" border='0' src='/Imagenes/Piezas/22.png' /></td>
+                                        <td><img ALT='2.3' width="25" height="55" border='0' src='/Imagenes/Piezas/23.png' /></td>
+                                        <td><img ALT='2.4' width="25" height="55" border='0' src='/Imagenes/Piezas/24.png' /></td>
+                                        <td><img ALT='2.5' width="25" height="55" border='0' src='/Imagenes/Piezas/25.png' /></td>
+                                        <td><img ALT='2.6' width="25" height="55" border='0' src='/Imagenes/Piezas/26.png' /></td>
+                                        <td><img ALT='2.7' width="25" height="55" border='0' src='/Imagenes/Piezas/27.png' /></td>
+                                        <td><img ALT='2.8' width="25" height="55" border='0' src='/Imagenes/Piezas/28.png' /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><img ALT='4.8' width="25" height="55" border='0' src='/Imagenes/Piezas/48.png' /></td>
+                                        <td><img ALT='4.7' width="25" height="55" border='0' src='/Imagenes/Piezas/47.png' /></td>
+                                        <td><img ALT='4.6' width="25" height="55" border='0' src='/Imagenes/Piezas/46.png' /></td>
+                                        <td><img ALT='4.5' width="25" height="55" border='0' src='/Imagenes/Piezas/45.png' /></td>
+                                        <td><img ALT='4.4' width="25" height="55" border='0' src='/Imagenes/Piezas/44.png' /></td>
+                                        <td><img ALT='4.3' width="25" height="55" border='0' src='/Imagenes/Piezas/43.png' /></td>
+                                        <td><img ALT='4.2' width="25" height="55" border='0' src='/Imagenes/Piezas/42.png' /></td>
+                                        <td><img ALT='4.1' width="20" height="55" border='0' src='/Imagenes/Piezas/41.png' /></td>
+                                        <td><img ALT='3.1' width="20" height="55" border='0' src='/Imagenes/Piezas/31.png' /></td>
+                                        <td><img ALT='3.2' width="25" height="55" border='0' src='/Imagenes/Piezas/32.png' /></td>
+                                        <td><img ALT='3.3' width="25" height="55" border='0' src='/Imagenes/Piezas/33.png' /></td>
+                                        <td><img ALT='3.4' width="25" height="55" border='0' src='/Imagenes/Piezas/34.png' /></td>
+                                        <td><img ALT='3.5' width="25" height="55" border='0' src='/Imagenes/Piezas/35.png' /></td>
+                                        <td><img ALT='3.6' width="25" height="55" border='0' src='/Imagenes/Piezas/36.png' /></td>
+                                        <td><img ALT='3.7' width="25" height="55" border='0' src='/Imagenes/Piezas/37.png' /></td>
+                                        <td><img ALT='3.8' width="25" height="55" border='0' src='/Imagenes/Piezas/38.png' /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="Display:none;" id="P50">5.0</td>
+                                        <td style="Display:none;" id="P49">4.9</td>
+                                        <td onclick="javascript: habilita_des(P48);" id="P48">4.8</td>
+                                        <td onclick="javascript: habilita_des(P47);" id="P47">4.7</td>
+                                        <td onclick="javascript: habilita_des(P46);" id="P46">4.6</td>
+                                        <td onclick="javascript: habilita_des(P45);" id="P45">4.5</td>
+                                        <td onclick="javascript: habilita_des(P44);" id="P44">4.4</td>
+                                        <td onclick="javascript: habilita_des(P43);" id="P43">4.3</td>
+                                        <td onclick="javascript: habilita_des(P42);" id="P42">4.2</td>
+                                        <td onclick="javascript: habilita_des(P41);" id="P41">4.1</td>
+                                        <td onclick="javascript: habilita_des(P31);" id="P31">3.1</td>
+                                        <td onclick="javascript: habilita_des(P32);" id="P32">3.2</td>
+                                        <td onclick="javascript: habilita_des(P33);" id="P33">3.3</td>
+                                        <td onclick="javascript: habilita_des(P34);" id="P34">3.4</td>
+                                        <td onclick="javascript: habilita_des(P35);" id="P35">3.5</td>
+                                        <td onclick="javascript: habilita_des(P36);" id="P36">3.6</td>
+                                        <td onclick="javascript: habilita_des(P37);" id="P37">3.7</td>
+                                        <td onclick="javascript: habilita_des(P38);" id="P38">3.8</td>
+                                        <td style="Display:none;" id="P39">3.9</td>
+                                        <td style="Display:none;" id="P40">4.0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnGuardaDetalleOrden" type="button" class="btn btn-dark float-right" >Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+@section Styles {
+    <link rel="stylesheet" href="~/vendor/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/vendor/sweetalert2/sweetalert2.min.css" />
+
+    <link rel="stylesheet" href="~/vendor/animate.css/animate.css">
+    <!-- WHIRL (spinners)-->
+    <link rel="stylesheet" href="~/vendor/whirl/dist/whirl.css">
+    <!-- =============== PAGE VENDOR STYLES ===============-->
+    <!-- Datatables-->
+    <link rel="stylesheet" href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-keytable-bs/css/keyTable.bootstrap.css">
+    <link rel="stylesheet" href="~/vendor/datatables.net-responsive-bs/css/responsive.bootstrap.css">
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link rel="stylesheet" href="../css/bootstrap.css" id="bscss">
+    <link rel="stylesheet" href="~/vendor/holdon/HoldOn.min.css" />
+}
+
+@section Scripts {
+    <script src="~/vendor/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/vendor/sweetalert2/sweetalert2.min.js"></script>
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    <!-- MODERNIZR-->
+    <script src="~/vendor/modernizr/modernizr.custom.js"></script>
+    <!-- JQUERY-->
+    <script src="~/vendor/jquery/dist/jquery.js"></script>
+    <!-- BOOTSTRAP-->
+    <script src="~/vendor/popper.js/dist/umd/popper.js"></script>
+    <script src="~/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- STORAGE API-->
+    <script src="~/vendor/js-storage/js.storage.js"></script>
+    <!-- JQUERY EASING-->
+    <script src="~/vendor/jquery.easing/jquery.easing.js"></script>
+    <!-- ANIMO-->
+    <script src="~/vendor/animo/animo.js"></script>
+    <!-- SCREENFULL-->
+    <script src="~/vendor/screenfull/dist/screenfull.js"></script>
+    <!-- LOCALIZE-->
+    <script src="~/vendor/jquery-localize/dist/jquery.localize.js"></script>
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    <!-- Datatables-->
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/dataTables.buttons.js"></script>
+    <script src="~/vendor/datatables.net-buttons-bs/js/buttons.bootstrap.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.colVis.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.flash.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.html5.js"></script>
+    <script src="~/vendor/datatables.net-buttons/js/buttons.print.js"></script>
+    <script src="~/vendor/datatables.net-keytable/js/dataTables.keyTable.js"></script>
+    <script src="~/vendor/datatables.net-responsive/js/dataTables.responsive.js"></script>
+    <script src="~/vendor/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="~/vendor/jszip/dist/jszip.js"></script>
+    <script src="~/vendor/pdfmake/build/pdfmake.js"></script>
+    <script src="~/vendor/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer.js@4.0.2/dist/easytimer.min.js"></script>
+    <script src="~/vendor/holdon/HoldOn.min.js"></script>
+    <script type="text/javascript">
+        $("#radioGarantiaC").attr('checked', false);
+        $("#radioFacturaC").attr('checked', false);
+        $("#radioUrgenteC").attr('checked', false);
+
+        function radioGarantiaE() { if (document.getElementById('radioGarantiaE').value == 0) { $("#radioGarantiaE").prop('checked', true); $("#radioGarantiaE").prop('value', 1); } else { $("#radioGarantiaE").prop('checked', false); $("#radioGarantiaE").prop('value', 0); } }
+        function radioGarantia() { if (document.getElementById('radioGarantiaC').value == 0) { $("#radioGarantiaC").prop('checked', true); $("#radioGarantiaC").prop('value', 1); } else { $("#radioGarantiaC").prop('checked', false); $("#radioGarantiaC").prop('value', 0); } }
+
+        function radioFacturaE() { if (document.getElementById('radioFacturaE').value == 0) { $("#radioFacturaE").prop('checked', true); $("#radioFacturaE").prop('value', 1); } else { $("#radioFacturaE").prop('checked', false); $("#radioFacturaE").prop('value', 0); } }
+        function radioFactura() { if (document.getElementById('radioFacturaC').value == 0) { $("#radioFacturaC").prop('checked', true); $("#radioFacturaC").prop('value', 1); } else { $("#radioFacturaC").prop('checked', false); $("#radioFacturaC").prop('value', 0); } }
+
+        function radioUrgenteE() { if (document.getElementById('radioUrgenteE').value == 0) { $("#radioUrgenteE").prop('checked', true); $("#radioUrgenteE").prop('value', 1); } else { $("#radioUrgenteE").prop('checked', false); $("#radioUrgenteE").prop('value', 0); } }
+        function radioUrgente() { if (document.getElementById('radioUrgenteC').value == 0) { $("#radioUrgenteC").prop('checked', true); $("#radioUrgenteC").prop('value', 1); } else { $("#radioUrgenteC").prop('checked', false); $("#radioUrgenteC").prop('value', 0); } }
+
+        //function radioSexo() {
+        //    if (document.getElementById('radioHombreC').value == 0)
+        //    {
+        //        $("#radioUrgenteC").prop('checked', true); $("#radioUrgenteC").prop('value', 1);
+        //    } else {
+        //        $("#radioUrgenteC").prop('checked', false); $("#radioUrgenteC").prop('value', 0);
+        //    }
+        //}
+
+
+
+    function buscar() {
+    }
+
+    function create() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Create", "OrdenLaboratorio")",
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#CreateForm-wrapper').html(data);
+                $('#CreateForm-wrapper').fadeIn();
+                HoldOn.close();
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+    }
+
+        $(document).ready(function () {
+            //$('#OrdenDet-Modal').appendTo("body").modal('show');
+        $('#EditView-wrapper').fadeOut();
+        $('#listado-wrapper').fadeOut();
+        //ListarTipoGasto();
+            create();
+            //crearTabla(11, 60, 11, 14);
+    });
+
+
+        @*function ListarTipoGasto() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getGridTipoGasto", "TipoGasto")",
+                data: $('form').serialize(),
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                   LimpiaDiv('EmpleadosForm-wrapper');
+                    $('#EmpleadosForm-wrapper').html(data);
+                    $('#EmpleadosForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }*@
+
+        function ListarDetXOrdenLab(_idOrden) {
+           // alert("ListarDetXOrdenLab(" + _idOrden+")");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getDetalleOrdenLab", "OrdenLaboratorio")",
+                data: { intOrdenLaboratorioEnc: _idOrden },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    LimpiaDiv('ListadoForm-wrapper');
+                    $('#ListadoForm-wrapper').html(data);
+                    $('#listado-wrapper').fadeIn();
+                    $('#ListadoForm-wrapper').fadeIn();
+                },
+                error: function (data) {
+                    Swal.fire({ title: "Error", text: "Error al obtener los datos..", type: 'error', });
+                }
+            });
+        }
+
+        function CargaDatosOrden(_idOrden) {
+            //alert("_idOrden = " + _idOrden);
+
+        //e.preventDefault();
+        $('#CreateView-wrapper').fadeOut();
+            //var ID = $(this).attr("data");
+            //console.log(ID);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditarOrdenLab", "OrdenLaboratorio")",
+            data: { intOrdenLab: _idOrden },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#EditForm-wrapper').html(data);
+                $('#EditForm-wrapper').fadeIn();
+                $('#EditView-wrapper').fadeIn();
+                HoldOn.close();
+                ListarDetXOrdenLab(_idOrden);
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+
+        }
+
+        $(document).on("click", ".urlEditar", function (e) {
+        e.preventDefault();
+        $('#CreateView-wrapper').fadeOut();
+            var ID = $(this).attr("data");
+            console.log(ID);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditarOrdenLab", "OrdenLaboratorio")",
+            data: { intOrdenLab: ID },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                $('#EditForm-wrapper').html(data);
+                $('#EditForm-wrapper').fadeIn();
+                $('#EditView-wrapper').fadeIn();
+                HoldOn.close();
+                $('#OrdenLab-Modal').appendTo("body").modal('hide');
+                ListarDetXOrdenLab(ID);
+            },
+            error: function (data) {
+                HoldOn.close();
+                console.log("Error", "Error al obtener los datos", "error");
+            }
+        });
+    });
+
+        $(document).on("click", ".urlEliminar", function (e) {
+
+            var _folio = document.getElementById("txtOrdenLabEnc").value;
+        e.preventDefault();
+        var ID = $(this).attr("data");
+        Swal.fire({
+            title: '¿Desesa eliminar este Registro? Este movimiento no se puede deshacer.',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("EliminarOrdenLaboratorioDet", "OrdenLaboratorio")",
+                    datatype: "json",
+                    traditional: true,
+                    data: { OrdenLaboratorioDet: ID },
+                    beforeSend: function () {
+                        HoldOn.open({
+                            theme: "sk-cube-grid"
+                        });
+                    },
+                    complete: function () {
+                        HoldOn.close();
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data)
+                        if (data.OK) {
+                            HoldOn.close();
+                            Swal.fire({ title: "Listo", text: "Registro eliminado", type: 'info', });
+                            ListarDetXOrdenLab(_folio);
+                        } else {
+                            Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                        }
+                    },
+                    error: function (data) {
+                        console.log("Error", "Error al eliminar este registro.", "error");
+                        HoldOn.close();
+                    }
+                });
+            }
+        });
+    });
+
+
+
+        $(document).on("click", "#GuardarOrdenLaboratorio-btn", function (e) {
+            e.preventDefault();
+
+            var _doctor = document.getElementById('cboDoctor').value;
+            var _nombrePaciente = $(@Html.IdFor(x => x.strNombrePaciente)).val();
+            var _precio = $(@Html.IdFor(x => x.dblPrecio)).val();
+            var _protesis = document.getElementById('cboProtesis').value;
+            var _proceso = document.getElementById('cboProceso').value;
+            var _colorimetro = document.getElementById('cboColorimetro').value;
+            var _color = document.getElementById('cboColor').value;
+            var _comentario = $(@Html.IdFor(x => x.strComentario)).val();
+            var _instrucciones = $(@Html.IdFor(x => x.strObservaciones)).val();
+            var _edad = $(@Html.IdFor(x => x.intEdad)).val();
+            var _sexo = document.getElementById('cboSexo').value;
+            var _fechaEntrega = $(@Html.IdFor(x => x.datFechaEntrega)).val();
+            var _peza = "1.10";
+
+
+            var _garantia = document.getElementById('radioGarantiaC').value;
+            var _factura = document.getElementById('radioFacturaC').value;
+            var _urgente = document.getElementById('radioUrgenteC').value;
+
+
+           // alert("_proceso : " + _proceso + "[--]_colorimetro : " + _colorimetro + "[--]_color : " + _color + "[--]_comentario : " + _comentario + "[--]_instrucciones : " + _instrucciones + "[--]_instrucciones : " + _instrucciones);
+
+            if (_nombrePaciente != '' && _edad != '' && _nombrePaciente != undefined && _edad != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GuardarOrdenLab", "OrdenLaboratorio")",
+                data: {
+                    intDoctor: _doctor,
+                    strNombrePaciente: _nombrePaciente,
+                    intExpediente: "100",
+                    intFolioPago: "1000",
+                    dblPrecio: _precio,
+                    intTipoProtesis: _protesis,
+                    intPieza: _peza,
+                    intProceso: _proceso,
+                    intTipoTrabajo: "1",
+                    strColor: "a1",
+                    strComentario: _comentario,
+                    strObservaciones: _instrucciones,
+                    intEdad: _edad,
+                    intSexo: _sexo,
+                    intGarantia: _garantia,
+                    intColor: _color,
+                    intFactura: _factura,
+                    datFechaEntrega: _fechaEntrega,
+                    datFechaColocacion: _fechaEntrega,
+                    intColorimetro: _colorimetro,
+                    intUrgente: _urgente,
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos guardados, Orden: " + data.Id, text: "Recuerda agregar el detlle para esta orden.", type: 'success', });
+                        HoldOn.close();
+                       // ListarTipoGasto();
+                       /// create();
+                        CargaDatosOrden(data.Id);
+                    } else {
+                        Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                    }
+                },
+                error: function (data) {
+                    console.log("Ocurrió el siguiente Error:", data.Mensaje, "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+                Swal.fire({ title: 'Faltan datos, por favor verifica que ningun campo este vacío.', type: 'error', });
+        }
+    });
+
+
+        $(document).on("click", "#GuardaEditOrdenLaboratorio-btn", function (e) {
+            e.preventDefault();
+
+            var EditarOrden = $('#EditForm-wrapper :input').serializeArray();
+            var ID;
+            var _fechaEntrega;
+            var _nombrePaciente;
+
+            var _precio;
+            var _comentario;
+            var _instrucciones;
+            var _edad;
+
+            console.log(EditarOrden);
+
+            EditarOrden.map(function (orda) {
+                if (orda.name === "intFolio") {
+                    ID = orda.value;
+                }
+                if (orda.name === "strNombrePaciente") {
+                    _nombrePaciente = orda.value;
+                }
+                if (orda.name === "dblPrecio") {
+                    _precio = orda.value;
+                }
+                if (orda.name === "intEdad") {
+                    _edad = orda.value;
+                }
+                if (orda.name === "strComentario") {
+                    _comentario = orda.value;
+                }
+                if (orda.name === "strObservaciones") {
+                    _instrucciones = orda.value;
+                }
+            });
+
+            console.log(ID);
+
+            var _doctor = document.getElementById('cboDoctor_E').value;
+            var _fechaEntrega = document.getElementById('txtFechaEntrega').value;
+            var _protesis = document.getElementById('cboProtesis_E').value;
+            var _proceso = document.getElementById('cboProceso_E').value;
+            var _colorimetro = document.getElementById('cboColorimetro_E').value;
+            var _color = document.getElementById('cboColor_E').value;
+            var _sexo = document.getElementById('cboSexo_E').value;
+            var _peza = "1.10";
+            var _garantia = document.getElementById('radioGarantiaE').value;
+            var _factura = document.getElementById('radioFacturaE').value;
+            var _urgente = document.getElementById('radioUrgenteE').value;
+
+
+            //alert("_sexo : " + _sexo);
+            //alert("_peza : " + _peza);
+            //alert("_garantia : " + _garantia);
+            //alert("_factura : " + _factura);
+            //alert("_urgente : " + _urgente);
+
+            if (_nombrePaciente != '' && _edad != '' && _nombrePaciente != undefined && _edad != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Guarda_EDIT_OrdenLab", "OrdenLaboratorio")",
+                data: {
+                    intOrdenLaboratorioEnc: ID,
+                    intDoctor: _doctor,
+                    strNombrePaciente: _nombrePaciente,
+                    intExpediente: "100",
+                    intFolioPago: "1000",
+                    dblPrecio: _precio,
+                    intTipoProtesis: _protesis,
+                    intPieza: _peza,
+                    intProceso: _proceso,
+                    intTipoTrabajo: "1",
+                    strColor: "a1",
+                    strComentario: _comentario,
+                    strObservaciones: _instrucciones,
+                    intEdad: _edad,
+                    intSexo: _sexo,
+                    intGarantia: _garantia,
+                    intColor: _color,
+                    intFactura: _factura,
+                    datFechaEntrega: _fechaEntrega,
+                    datFechaColocacion: _fechaEntrega,
+                    intColorimetro: _colorimetro,
+                    intUrgente: _urgente,
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos actualizados, Orden: " + data.Id, text: "Si deseas agregar información para el detalle, es buen momento para hacerlo.", type: 'success', });
+                        HoldOn.close();
+                        CargaDatosOrden(data.Id);
+                    } else {
+                        Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                    }
+                },
+                error: function (data) {
+                    console.log("Ocurrió el siguiente Error:", data.Mensaje, "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+                Swal.fire({ title: 'Faltan datos, por favor verifica que ningun campo este vacío.', type: 'error', });
+        } 
+    });
+
+        function LimpiaDiv(elementID) {
+            var div = document.getElementById(elementID);
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+
+            }
+        }
+
+
+        $(document).on("click", "#AgregaDetalle-btn", function (e) {
+            e.preventDefault();
+
+            var _folio = document.getElementById("txtOrdenLabEnc").value;
+            //alert("Nuevo Detalle para el folio :" + _folio);
+            $('#OrdenDet-Modal').appendTo("body").modal('show');
+            cargarNuevoDetalleOrdenLab(_folio);
+        });
+
+        $(document).on("click", "#btnImprimir_E", function (e) {
+            e.preventDefault();
+
+            var _folio = document.getElementById("txtOrdenLabEnc").value;
+
+            ImprimirOrden(_folio);
+        });
+
+
+
+
+        function ImprimirOrden(intOrdenLaboratorioEnc) {
+
+            //alert(intOrdenLaboratorioEnc);
+            var __empresa = "1";
+
+            if (window.showModalDialog) {
+                window.showModalDialog('http://192.168.0.10/VetecReportes/Reportes/OrdenDentalPrint2.aspx?orden=' + intOrdenLaboratorioEnc + '&Folio=' + intOrdenLaboratorioEnc + '&empresa=1&sucursal=1&emailorigen=joc@algo.com&bd=LabAllCeramic&nombreempresa=AllCeramic', 'name', 'height=100px,width=700px,toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,modal=yes');
+            } else {
+                window.open('http://192.168.0.10/VetecReportes/Reportes/OrdenDentalPrint2.aspx?orden=' + intOrdenLaboratorioEnc + '&Folio=' + intOrdenLaboratorioEnc + '&empresa=1&sucursal=1&emailorigen=joc@alco.com&bd=LabAllCeramic&nombreempresa=AllCeramic', 'name', 'height=100px,width=700px,toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,modal=yes');
+            }
+
+            abreOrden(intOrdenLaboratorioEnc);
+        }
+
+        function abreOrden(intOrdenLaboratorioEnc) {
+
+
+            //if (window.showModalDialog) {
+            //    window.showModalDialog('http://192.168.0.10/LabAllCeramic/LabAllCeramicUI/Comercial/PDF/OrdenDental/OrdenDental' + intOrdenLaboratorioEnc + '.pdf', 'name', 'height=100px,width=700px,toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,modal=yes');
+            //} else {
+            //  window.open('http://192.168.0.10/LabAllCeramic/LabAllCeramicUI/Comercial/PDF/OrdenDental/OrdenDental' + intOrdenLaboratorioEnc + '.pdf', 'name', 'height=100px,width=700px,toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes');
+            //}
+
+            window.open('http://192.168.0.10/LabAllCeramic/LabAllCeramicUI/Comercial/PDF/OrdenDental/OrdenDental' + intOrdenLaboratorioEnc + '.pdf', '_blank');
+
+
+        }
+
+        $(document).on("click", "#Ayuda-Span", function (e) {
+            e.preventDefault();
+
+            $('#OrdenLab-Modal').appendTo("body").modal('show');
+            cargarAyuda(0, 0, 0);
+        });
+
+        $(document).on("click", "#Filtro-Span", function (e) {
+            e.preventDefault();
+
+            var _doctor_Busca = document.getElementById('cboDoctor_Busca').value;
+            var _protesis_Busca = document.getElementById('cboProtesis_Busca').value;
+
+            cargarAyuda(0, _doctor_Busca, _protesis_Busca);
+        });
+
+        function cargarAyuda(_folio, _doctor, _protesis) {
+        var HoldOptionsImp =
+              {
+            theme: "sk-bounce",
+            message: 'Espere....',
+                    backgroundColor: "#1847B1",
+                    textColor: "white"
+          };
+          HoldOn.open(HoldOptionsImp);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getAyudaOrdenLab", "OrdenLaboratorio")",
+                data: {
+                    FolioBusca: _folio,
+                    intDoctor: _doctor,
+                    intTipoProtesis: _protesis
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    LimpiaDiv('ayuda-wrapper');
+                    $('#ayuda-wrapper').html(data);
+                    $('#ayuda-wrapper').fadeIn();
+                    HoldOn.close();
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    swal("Error", "No se pudieron cargar los datos. Error0001", "error");
+                }
+            });
+        }
+
+
+        function cargarNuevoDetalleOrdenLab(_OrdenLab) {
+        var HoldOptionsImp =
+              {
+            theme: "sk-bounce",
+            message: 'Espere....',
+                    backgroundColor: "#1847B1",
+                    textColor: "white"
+          };
+          HoldOn.open(HoldOptionsImp);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("getOrdenLabDet", "OrdenLaboratorio")",
+                data: {
+                    OrdenLaboratorioEnc: _OrdenLab
+                },
+                datatype: "json",
+                traditional: true,
+                success: function (data) {
+                    //LimpiaDiv('ayuda-wrapper');
+                    //$('#ayuda-wrapper').html(data);
+                    //$('#ayuda-wrapper').fadeIn();
+                    HoldOn.close();
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    swal("Error", "No se pudieron cargar los datos. Error0001", "error");
+                }
+            });
+        }
+
+    function CargaTiposTrabajo(_Material) {
+        //alert(_Protesis);
+        var cboTipoTrabajo_Det = document.getElementById("cboTipoTrabajo_Det");
+        cboTipoTrabajo_Det.innerHTML = "";
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetTipoTrabajoXMaterial", "OrdenLaboratorio")",
+                dataType: "json",
+                data: { intMaterial: _Material },
+            })
+                .done(function (lista) {
+
+                    lista.forEach(e => {
+                        const option = document.createElement('option');
+                        option.text = e.strNombre;
+                        option.value = e.intTrabajo;
+                        cboTipoTrabajo_Det.appendChild(option);
+                    })
+                });
+
+        }
+
+        function habilita_des(e) {
+            //alert(e);
+            var principal1 = document.getElementById('ColorPrincipal');
+
+            if (e.style.backgroundColor == principal1.style.backgroundColor) {
+                e.style.backgroundColor = 'rgb(255, 255, 255)';
+                e.style.color = 'rgb(0, 0, 0)';
+
+                var piezasFin = document.getElementById('tdValor');
+                //alert(e.innerText);
+                var limpia = e.innerText + "~";
+                //alert("limpia: " + limpia);
+                var texto = piezasFin.innerText;
+                //alert("texto: " + texto);
+                var nuvoTexto = texto.replace(limpia, "");
+                //alert(nuvoTexto);
+                piezasFin.innerText = piezasFin.innerText.replace(limpia, "");
+
+            } else {
+                e.style.backgroundColor = principal1.style.backgroundColor;
+                e.style.color = principal1.style.color;
+
+                var piezasFin = document.getElementById('tdValor');
+                piezasFin.innerText = piezasFin.innerText + e.innerText +"~";
+            }
+
+        }
+
+
+        $(document).on("click", "#btnGuardaDetalleOrden", function (e) {
+            e.preventDefault();
+
+            var _folio = document.getElementById("txtOrdenLabEnc").value;
+            var _material = document.getElementById('cboMaterial_Det').value;
+            var _Trabajo = document.getElementById('cboTipoTrabajo_Det').value;
+            var _pieza = document.getElementById('tdValor').innerText;
+
+
+
+
+            if (_folio != '' && _material != '' && _Trabajo != '' && _material != '0' && _Trabajo != '0' && _pieza != '' && _folio != undefined && _material != undefined && _Trabajo != undefined && _pieza != undefined) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("OrdenLaboratorioDet_V2_App", "OrdenLaboratorio")",
+                data: {
+
+                    intOrdenLaboratorioEnc: _folio,
+                    intPieza: _pieza,
+                    intMaterial: _material,
+                    intTipoTrabajo: _Trabajo
+                },
+                datatype: "json",
+                traditional: true,
+                beforeSend: function () {
+                    HoldOn.open({
+                        theme: "sk-cube-grid"
+                    });
+                },
+                complete: function () {
+                    HoldOn.close();
+                },
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.OK) {
+                        Swal.fire({ title: "Datos guardados, Orden: " + data.Id, text: "Recuerda agregar el detlle para esta orden.", type: 'success', });
+                        HoldOn.close();
+                        ListarDetXOrdenLab(_folio);
+                        $('#OrdenDet-Modal').appendTo("body").modal('hide');
+                        LimpiaModalDetalle();
+                    } else {
+                        Swal.fire({ title: "Ocurrió el siguiente Error:", text: data.Mensaje, type: 'warning', });
+                    }
+                },
+                error: function (data) {
+                    console.log("Ocurrió el siguiente Error:", data.Mensaje, "error");
+                    HoldOn.close();
+                }
+            });
+        } else {
+                Swal.fire({ title: 'Faltan datos, por favor verifica que ningun campo este vacío.', type: 'error', });
+        }
+        });
+
+        function LimpiaModalDetalle() {
+            document.getElementById('tdValor').innerText = "";
+
+            document.getElementById('P18').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P18').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P17').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P17').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P16').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P16').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P15').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P15').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P14').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P14').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P13').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P13').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P12').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P12').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P11').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P11').style.color = 'rgb(0, 0, 0)';
+
+            document.getElementById('P28').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P28').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P27').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P27').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P26').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P26').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P25').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P25').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P24').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P24').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P23').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P23').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P22').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P22').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P21').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P21').style.color = 'rgb(0, 0, 0)';
+
+            document.getElementById('P38').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P38').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P37').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P37').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P36').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P36').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P35').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P35').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P34').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P34').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P33').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P33').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P32').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P32').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P31').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P31').style.color = 'rgb(0, 0, 0)';
+
+            document.getElementById('P48').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P48').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P47').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P47').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P46').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P46').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P45').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P45').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P44').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P44').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P43').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P43').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P42').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P42').style.color = 'rgb(0, 0, 0)';
+            document.getElementById('P41').style.backgroundColor = 'rgb(255, 255, 255)';
+            document.getElementById('P41').style.color = 'rgb(0, 0, 0)';
+
+        }
+
+
+    </script>
+}
+
